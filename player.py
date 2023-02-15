@@ -104,3 +104,7 @@ class Player:
         new_elo = int(new_elo + 0.5)
         
         return new_elo
+
+    def print_player(self):
+        # Name, elo history
+        print(self.name + " (" + str(self.elo) + ")")

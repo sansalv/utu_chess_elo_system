@@ -37,10 +37,7 @@ def load_games():
     games_dictionary = json.loads(json_format)
     return games_dictionary
 
-#_______________________________________________________________________
-	
-def main():
-	
+def input_tournament():
 	date = "2023-02-15"
 	# Create players (test version)
 	# TODO: load old players and new players from sheets data
@@ -72,6 +69,108 @@ def main():
 		p.update_elo_and_history(date, new_elo)
 
 	save_players(players)
+
+def data_query():
+	x = input("Input the name of the player you wish to look up: ")
+	if x == "":
+		return
+	# TODO: load old players from json data
+
+	# Fake players
+	players = []
+	new_player_names = ["Santeri Salomaa", "Elias Ervelä", "Kimmo Pyyhtiä", "Onni Snåre"]
+	for name in new_player_names:
+		new_player = newPlayer(name)
+		players.append(new_player)
+	# Ends
+
+	for p in players:
+		if p.get_name() == x:
+			print_player_games(p)
+			break
+	return
+
+def print_player_games(x):
+	# TODO: load old games from json data
+
+	# Fake players
+	players = []
+	new_player_names = ["Onni Snåre", "Elias Ervelä", "Kimmo Pyyhtiä", "Santeri Salomaa"]
+	for name in new_player_names:
+		new_player = newPlayer(name)
+		players.append(new_player)
+	# Ends
+
+	# Fake games
+	data1 = ["Santeri Salomaa", "Elias Ervelä", 1]
+	data2 = ["Santeri Salomaa", "Kimmo Pyyhtiä", 1]
+	data3 = ["Santeri Salomaa", "Onni Snåre", 0]
+	data = [data1, data2, data3]
+	games = []
+	for d in data:
+		w = find_player(players, d[0])
+		b = find_player(players, d[1])
+		w_elo = w.get_elo()
+		b_elo = b.get_elo()
+
+		g = game.Game("1.1.2023", d[0], w_elo, d[1], b_elo, d[2])
+		games.append(g)
+	# Ends
+
+	x.print_player()
+	for peli in games:
+		if (peli.get_white_name() == x.get_name() or peli.get_black_name() == x.get_name()):
+			peli.print_game()
+	input("Loppu")
+
+
+
+#_______________________________________________________________________
+	
+def main():
+	#Fake players
+	players = []
+	new_player_names = ["Santeri Salomaa", "Elias Ervelä", "Kimmo Pyyhtiä", "Onni Snåre"]
+	for name in new_player_names:
+		new_player = newPlayer(name)
+		players.append(new_player)
+	#Ends
+
+	# Fake games
+	data1 = ["Santeri Salomaa", "Elias Ervelä", 1]
+	data2 = ["Santeri Salomaa", "Kimmo Pyyhtiä", 1]
+	data3 = ["Santeri Salomaa", "Onni Snåre", 0]
+	data = [data1, data2, data3]
+	games = []
+	for d in data:
+		w = find_player(players, d[0])
+		b = find_player(players, d[1])
+		w_elo = w.get_elo()
+		b_elo = b.get_elo()
+
+		g = game.Game("1.1.2023", d[0], w_elo, d[1], b_elo, d[2])
+		games.append(g)
+	#Ends
+	verbose = True
+	#Input tournament data
+	#Look up player specific data
+	#
+	command = input("Input a command \n 1: Input tournament data \n 2: Look at a profile \n")
+	match command:
+		case "1":
+			if verbose:
+				print("Entering data input")
+			input_tournament()
+		case "2":
+			if verbose:
+				print("Entering data query")
+			data_query()
+		case "":
+			exit()
+		case "t":
+			games[2].print_game()
+		case _:
+			print("Incorrect command")
 
 	
 		
