@@ -1,0 +1,18 @@
+[
+    {
+        "date": "2023-02-15",
+        "white_name": "Santeri Salomaa",
+        "black_name": "Elias Ervel\u00e4",
+        "white_elo": 1500,
+        "black_elo": 800,
+        "white_score": 0
+    },
+    {
+        "date": "2023-02-15",
+        "white_name": "Santeri Salomaa",
+        "black_name": "Kimmo Pyyhti\u00e4",
+        "white_elo": 1500,
+        "black_elo": 1500,
+        "white_score": 1
+    }
+]
