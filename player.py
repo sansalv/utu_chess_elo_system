@@ -1,22 +1,24 @@
-import json
-
 class Player:
-    def __init__(self, name, elo, elo_history, N, id):
+    def __init__(self, name, elo, elo_history, games_played):
         self.name = name
         self.elo = elo
         self.elo_history = elo_history
-        self.N = N # Number of games played
-        self.id = id
+        self.games_played = games_played
+        #self.id = id
 
     # Setters and getters:
     def get_name(self):
         return self.name
     def get_id(self):
         return self.id
+    def get_elo(self):
+        return self.elo
     def get_elo_history(self):
         return self.elo_history
-    def update_elo(self, new_elo):
+    
+    def update_elo_and_history(self, date, new_elo):
         self.elo = new_elo
+        self.elo_history.append((date, new_elo))
 
     """
     Functions:
@@ -28,8 +30,6 @@ class Player:
     def calculate_new_elo_single(self, opponent_elo, score):
         """
         Method that returns new Elo rating from a SINGLE game
-            score: 0=lose, 0.5=tie, 1=win
-            opponent_elo: eg. 1500
 
         To understand Elo, read:
         https://www.omnicalculator.com/sports/elo
@@ -37,9 +37,9 @@ class Player:
         """
 
         # Define the K-factor form number of games (=n)
-        if self.N <= 10:
+        if self.games_played <= 10:
             K = 128
-        elif self.N <= 20:
+        elif self.games_played <= 20:
             K = 64
         else:
             K = 32
@@ -49,23 +49,22 @@ class Player:
             
         # Calculate new elo rating
         new_elo = self.elo + K*(score - expected_score)
+
+        # Round to nearest integer
+        new_elo = int(new_elo + 0.5)
         
         return new_elo
 
-    def calculate_new_elo_tournament(self, games): # games = row in tournament dataframe?
+    def calculate_new_elo_tournament(self, games):
         """
         Method that returns new Elo rating from games list (from whole tournament day)
-        
-            tuple elements in games list:
-                score: 0=lose, 0.5=tie, 1=win
-                opponent_elo: f.ex. 1500
         """
         
         # Define the K-factor form number of games previous to these (=n)
         # (New players get bigger Elo correction jumps)
-        if self.N <= 10:
+        if self.games_played <= 10:
             K = 128
-        elif self.N <= 20:
+        elif self.games_played <= 20:
             K = 64
         else:
             K = 32
@@ -73,12 +72,28 @@ class Player:
         # Calculate score of the day vs. expected score of the day
         score_sum = 0
         expected_score_sum = 0
+        # Iterate games of the day
         for g in games:
-        
-            score = g[0]
+            white = False
+            black = False
+            if self.name == g.get_white_name():
+                white = True
+            elif self.name == g.get_black_name():
+                black = True
+            else:
+                continue # Not your game
+
+            # If your game
+            self.games_played += 1
+
+            if white:
+                score = g.get_white_score()
+                opponent_elo = g.get_black_elo()
+            else:
+                score = 1 - g.get_white_score()
+                opponent_elo = g.get_white_elo()
             score_sum += score
-            
-            opponent_elo = g[1]
+    
             expected_score = 1/(1 + 10**((opponent_elo - self.elo)/400))
             expected_score_sum += expected_score
         

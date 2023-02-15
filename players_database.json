@@ -1,0 +1,35 @@
+[
+  {
+    "name": "Santeri Salomaa",
+    "elo": 1628,
+    "elo_history": [
+      [
+        "2023-02-15",
+        1628
+      ]
+    ],
+    "games_played": 2
+  },
+  {
+    "name": "Elias Ervel\u00e4",
+    "elo": 1436,
+    "elo_history": [
+      [
+        "2023-02-15",
+        1436
+      ]
+    ],
+    "games_played": 1
+  },
+  {
+    "name": "Kimmo Pyyhti\u00e4",
+    "elo": 1436,
+    "elo_history": [
+      [
+        "2023-02-15",
+        1436
+      ]
+    ],
+    "games_played": 1
+  }
+]
