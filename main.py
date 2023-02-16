@@ -1,5 +1,6 @@
-#import ???
-
+import json
+import player
+import game
 #_______________________________________________________________________
 '''
 Functions:
@@ -63,73 +64,56 @@ def from_table_to_games_list(games_table, verbose=False):
     return games_list
 
 
-def update_elo_single(old_elo, opponent_elo, score, n):
-	'''
-	Method that returns new Elo rating from a SINGLE game
 
-		score: 0=lose, 0.5=tie, 1=win
-		opponent_elo: f.ex. 1500
-		n: number of games played until this
-		
-	To understand Elo, read https://www.omnicalculator.com/sports/elo
-	'''
-	
-	# Define the K-factor form number of games (=n)
-	if n <= 10:
-		K = 128
-	elif n <= 20:
-		K = 64
+
+# Create new player instance. Starting Elo rating depends on the level
+# level 0 = beginner league player, level 1 = experienced league player
+def newPlayer(name, level):
+	if level == 0:
+		starting_elo = 800
 	else:
-		K = 32
-	
-	# Calculate expected score of the game
-	expected_score = 1/(1 + 10**((opponent_elo - old_elo)/400))
-		
-	# Calculate new elo rating
-	new_elo = old_elo + K*(score - expected_score)
-	
-	return new_elo
+		starting_elo = 1500
+	new_player = player.Player(name, starting_elo, [], 0)
+	return new_player
 
+# Return Player (instance) from name (string)
+def find_player(players, name):
+	for p in players:
+		if p.get_name() == name:
+			return p
+	return 0
+#_______________________________________________________________________
+# Methods for saving and loading the json data
 
-def update_elo_tournament(old_elo, games, n):
-	'''
-	Method that returns new Elo rating from games list (from whole tournament day)
-	
-		tuple elements in games list:
-			score: 0=lose, 0.5=tie, 1=win
-			opponent_elo: f.ex. 1500
-		n: number of games played until this DAY
-	'''
-	
-	# Define the K-factor form number of games previous to these (=n)
-	# (New players get bigger Elo correction jumps)
-	if n <= 10:
-		K = 128
-	elif n <= 20:
-		K = 64
-	else:
-		K = 32
-	
-	# Calculate score of the day vs. expected score of the day
-	score_sum = 0
-	expected_score_sum = 0
-	for g in games:
-	
-		score = g[0]
-		score_sum += score
-		
-		opponent_elo = g[1]
-		expected_score = 1/(1 + 10**((opponent_elo - old_elo)/400))
-		expected_score_sum += expected_score
-	
-	# Calculate new Elo rating
-	new_elo = old_elo + K*(score_sum - expected_score_sum)
-	
-	# Round to nearest integer
-	new_elo = int(new_elo + 0.5)
-	
-	return new_elo
+def save_players(players):
+	# Make a list of Player dictionaries
+	playerstable = [vars(p) for p in players]
+	json_format = json.dumps(playerstable, indent=4)
+	with open("players_database.json", "w") as db:
+		db.write(json_format)
 
+def save_games(games):
+	# Make a list of Game dictionaries
+	gamestable = [vars(g) for g in games]
+	json_format = json.dumps(gamestable, indent=4)
+	with open("games_database.json", "w") as db:
+		db.write(json_format)
+
+# TODO: Finish this method. Now only makes player dictionaries
+def load_players():
+    with open("players_database.json", "r") as db:
+        json_format = db.read()
+    players_dictionary = json.loads(json_format)
+    return players_dictionary
+
+# TODO: Finish this method. Now only makes game dictionaries
+def load_games():
+    with open("games_database.json", "r") as db:
+        json_format = db.read()
+    games_dictionary = json.loads(json_format)
+    return games_dictionary
+
+#_______________________________________________________________________
 #_______________________________________________________________________
 	
 def main():
