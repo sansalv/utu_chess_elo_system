@@ -44,14 +44,14 @@ def from_table_to_games_list(games_table, verbose=False):
             # ww=white win, wt=white tie, wl=white loss, bw=black win, bt=black tie, bl=black lose
             if games_table.loc[ind,col] == "ww":
                 games_list.append([str(ind), str(col), 1])
-            elif games_table.loc[ind,col] == "wt":
+            elif games_table.loc[ind,col] == "wd":
                 games_list.append([str(ind), str(col), 0.5])
             elif games_table.loc[ind,col] == "wl":
                 games_list.append([str(ind), str(col), 0])
 
             elif games_table.loc[ind,col] == "bw":
                 games_list.append([str(col), str(ind), 0])
-            elif games_table.loc[ind,col] == "bt":
+            elif games_table.loc[ind,col] == "bd":
                 games_list.append([str(col), str(ind), 0.5])
             elif games_table.loc[ind,col] == "bl":
                 games_list.append([str(col), str(ind), 1])
