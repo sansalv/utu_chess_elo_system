@@ -1,35 +1,47 @@
 [
     {
         "name": "Elias Ervel\u00e4",
-        "elo": 926,
+        "elo": 1168,
         "elo_history": [
             [
                 "2023-02-15",
-                926
-            ]
-        ],
-        "games_played": 1
-    },
-    {
-        "name": "Santeri Salomaa",
-        "elo": 1438,
-        "elo_history": [
+                1121
+            ],
             [
-                "2023-02-15",
-                1438
+                "2023-02-16",
+                1168
             ]
         ],
         "games_played": 2
     },
     {
+        "name": "Santeri Salomaa",
+        "elo": 1331,
+        "elo_history": [
+            [
+                "2023-02-15",
+                1443
+            ],
+            [
+                "2023-02-16",
+                1331
+            ]
+        ],
+        "games_played": 4
+    },
+    {
         "name": "Kimmo Pyyhti\u00e4",
-        "elo": 1436,
+        "elo": 1501,
         "elo_history": [
             [
                 "2023-02-15",
                 1436
+            ],
+            [
+                "2023-02-16",
+                1501
             ]
         ],
-        "games_played": 1
+        "games_played": 2
     }
 ]
