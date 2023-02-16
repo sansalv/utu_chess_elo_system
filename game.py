@@ -27,7 +27,10 @@ class Game:
         if (name == self.white_name and self.white_score == 1) or (name == self.black_name and self.white_score == 0):
             print("[" + str(self.date) + "] " + self.white_name + " (" + str(self.white_elo) +") "+ self.black_name + " (" + str(self.black_elo) +") " + str(self.white_score)  + colored(" Victory", "yellow"))
         else:
-            print("[" + str(self.date) + "] " + self.white_name + " (" + str(self.white_elo) +") "+ self.black_name + " (" + str(self.black_elo) +") " + str(self.white_score)  + colored(" Defeat", "red"))
+            if (self.white_score == 0.5):
+                print("[" + str(self.date) + "] " + self.white_name + " (" + str(self.white_elo) +") "+ self.black_name + " (" + str(self.black_elo) +") " + str(self.white_score)  + colored(" Tie", "light_blue"))
+            else:
+                print("[" + str(self.date) + "] " + self.white_name + " (" + str(self.white_elo) +") "+ self.black_name + " (" + str(self.black_elo) +") " + str(self.white_score)  + colored(" Defeat", "red"))
 
 
 
