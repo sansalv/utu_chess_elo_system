@@ -15,4 +15,3 @@
 - Have a file that contains current **Elo leaderboard** (in decending order)
     - | **Player** | **Elo** | 
 
-### Methods:
