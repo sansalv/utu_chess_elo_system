@@ -1,19 +1,24 @@
 import json
 import player
 import game
+import pandas as pd
 import os
+#_______________________________________________________________________
 
-def from_table_to_games_list(games_table, verbose=False):
+
+def from_table_to_games_list(file_location, verbose=False):
     """
 	Turns tournament game table in to list of games.
 
 		Variables:
-			games_table: Table of tournament games. Indexes and columns have players names, and in the cells there is info of who won. Eg. ww=white win, bl=black lose, bt=black tie 
+			file_location: Location of the table of tournament games. In which Indexes and columns have players names, and in the cells there is info of who won. Eg. ww=white win, bl=black lose, bd=black draw.
 			verbose: if True, print table and games_list
 
 		Returns: List of games, where every games are in format [white_name, black_name, white_result]
 
 	"""
+	# Read the table from file_location
+    games_table = pd.read_csv(file_location, dtype=str, index_col=0)
 
     if verbose: print("Table: \n", games_table)
 
@@ -56,6 +61,11 @@ def from_table_to_games_list(games_table, verbose=False):
     return games_list
 
 #_______________________________________________________________________
+
+# Gets list of players name from tournament table (pandas dataframe) and returns list of strings.
+def get_players_from_table(games_table):
+     player_list = games_table.index
+     return list(player_list)
 
 
 def generate_fakeplayers():
