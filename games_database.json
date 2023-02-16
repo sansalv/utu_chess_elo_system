@@ -4,7 +4,7 @@
         "white_name": "Santeri Salomaa",
         "black_name": "Elias Ervel\u00e4",
         "white_elo": 1500,
-        "black_elo": 800,
+        "black_elo": 1000,
         "white_score": 0
     },
     {
@@ -14,5 +14,21 @@
         "white_elo": 1500,
         "black_elo": 1500,
         "white_score": 1
+    },
+    {
+        "date": "2023-02-16",
+        "white_name": "Santeri Salomaa",
+        "black_name": "Elias Ervel\u00e4",
+        "white_elo": 1443,
+        "black_elo": 1121,
+        "white_score": 0.5
+    },
+    {
+        "date": "2023-02-16",
+        "white_name": "Santeri Salomaa",
+        "black_name": "Kimmo Pyyhti\u00e4",
+        "white_elo": 1443,
+        "black_elo": 1436,
+        "white_score": 0
     }
 ]
