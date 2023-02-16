@@ -16,7 +16,7 @@ def from_table_to_games_list(games_table, verbose=False):
 	Turns tournament game table in to list of games.
 
 		Variables:
-			games_table: Table of tournament games. Indexes and columns have players names, and in the cells there is info of who won. Eg. ww=white win, bl=black lose, bt=black tie 
+			games_table: Table of tournament games. Indexes and columns have players names, and in the cells there is info of who won. Eg. ww=white win, bl=black lose, bd=black draw 
 			verbose: if True, print table and games_list
 
 		Returns: List of games, where every games are in format [white_name, black_name, white_result]
@@ -63,7 +63,11 @@ def from_table_to_games_list(games_table, verbose=False):
 
     return games_list
 
-
+#==== Eliaksen metkuja
+def get_players_from_table(games_table):
+     player_list = games_table.index
+     return list(player_list)
+#====
 
 
 # Create new player instance. Starting Elo rating depends on the level
