@@ -5,7 +5,7 @@
         "black_name": "Elias Ervel\u00e4",
         "white_elo": 1500,
         "black_elo": 1000,
-        "white_score": 0
+        "white_score": 1
     },
     {
         "date": "2023-02-15",
@@ -13,22 +13,38 @@
         "black_name": "Kimmo Pyyhti\u00e4",
         "white_elo": 1500,
         "black_elo": 1500,
+        "white_score": 0
+    },
+    {
+        "date": "2023-02-15",
+        "white_name": "Onni Sn\u00e5re",
+        "black_name": "Elias Ervel\u00e4",
+        "white_elo": 1000,
+        "black_elo": 1000,
         "white_score": 1
     },
     {
-        "date": "2023-02-16",
-        "white_name": "Santeri Salomaa",
-        "black_name": "Elias Ervel\u00e4",
-        "white_elo": 1443,
-        "black_elo": 1121,
+        "date": "2023-02-15",
+        "white_name": "Kimmo Pyyhti\u00e4",
+        "black_name": "Onni Sn\u00e5re",
+        "white_elo": 1500,
+        "black_elo": 1000,
+        "white_score": 0
+    },
+    {
+        "date": "2023-02-15",
+        "white_name": "Kerttu Pusa",
+        "black_name": "Santeri Salomaa",
+        "white_elo": 1000,
+        "black_elo": 1500,
         "white_score": 0.5
     },
     {
-        "date": "2023-02-16",
-        "white_name": "Santeri Salomaa",
-        "black_name": "Kimmo Pyyhti\u00e4",
-        "white_elo": 1443,
-        "black_elo": 1436,
+        "date": "2023-02-15",
+        "white_name": "Kaisa Hakkarainen",
+        "black_name": "Santeri Salomaa",
+        "white_elo": 1000,
+        "black_elo": 1500,
         "white_score": 0
     }
 ]

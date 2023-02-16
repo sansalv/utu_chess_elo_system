@@ -1,3 +1,5 @@
+from termcolor import colored
+
 class Game:
 
     def __init__(self, date, white_name, white_elo, black_name, black_elo, white_score):
@@ -20,10 +22,15 @@ class Game:
     def get_white_score(self):
         return self.white_score
     
-    def print_game(self):
+    def print_game(self, name):
         # Date / White name (rating) / black name (rating) / white_score
-        game_list = [f"{self.white_name} ({self.white_elo})" , f"{self.black_name} ({self.black_elo})" , self.white_score]
-        print(game_list)
+        if (name == self.white_name and self.white_score == 1) or (name == self.black_name and self.white_score == 0):
+            print("[" + str(self.date) + "] " + self.white_name + " (" + str(self.white_elo) +") "+ self.black_name + " (" + str(self.black_elo) +") " + str(self.white_score)  + colored(" Victory", "yellow"))
+        else:
+            if (self.white_score == 0.5):
+                print("[" + str(self.date) + "] " + self.white_name + " (" + str(self.white_elo) +") "+ self.black_name + " (" + str(self.black_elo) +") " + str(self.white_score)  + colored(" Tie", "light_blue"))
+            else:
+                print("[" + str(self.date) + "] " + self.white_name + " (" + str(self.white_elo) +") "+ self.black_name + " (" + str(self.black_elo) +") " + str(self.white_score)  + colored(" Defeat", "red"))
 
 
 

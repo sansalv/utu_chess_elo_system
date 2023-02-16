@@ -1,7 +1,7 @@
 import json
 import player
 import game
-#_______________________________________________________________________
+import os
 
 def from_table_to_games_list(games_table, verbose=False):
     """
@@ -55,8 +55,35 @@ def from_table_to_games_list(games_table, verbose=False):
 
     return games_list
 
-#--------------------------------------------------
+#_______________________________________________________________________
 
+
+def generate_fakeplayers():
+	players = []
+	new_player_names = ["Onni Snåre", "Elias Ervelä", "Kimmo Pyyhtiä", "Santeri Salomaa", "Lauri Maila"]
+	for name in new_player_names:
+		new_player = newPlayer(name, 0)
+		players.append(new_player)
+	return players
+
+def generate_fakegames():
+	players = generate_fakeplayers()
+	data1 = ["Santeri Salomaa", "Elias Ervelä", 1]
+	data2 = ["Santeri Salomaa", "Kimmo Pyyhtiä", 1]
+	data3 = ["Santeri Salomaa", "Onni Snåre", 0]
+	data4 = ["Lauri Maila", "Santeri Salomaa", 0]
+	data5 = ["Onni Snåre", "Elias Ervelä", 1]
+	data = [data1, data2, data3, data4, data5]
+	games = []
+	for d in data:
+		w = find_player(players, d[0])
+		b = find_player(players, d[1])
+		w_elo = w.get_elo()
+		b_elo = b.get_elo()
+
+		g = game.Game("1.1.2023", d[0], w_elo, d[1], b_elo, d[2])
+		games.append(g)
+	return games
 
 # Create new player instance. Starting Elo rating depends on the level
 # level 0 = beginner league, level 1 = intermediate league, level 2 = experienced league
@@ -127,19 +154,21 @@ def load_games(filename = "games_database.json"):
 	game_dictionaries = json.loads(json_format)
 	games = []
 	for j in game_dictionaries:
-		games.append(game.Games(**j))
+		games.append(game.Game(**j))
 	return games
 
 
 #_______________________________________________________________________
-#_______________________________________________________________________
-	
-def main():
-	"""
-	Here main() handles tournament data. Creates games and players from test data.
+#Tournament data input
 
+def input_tournament():
+	filename = input("Insert filename of the tournament .csv-file: ")
+	players = load_players()
+	"""
+	Here input_tournament() handles tournament data. Creates games and players from test data.
 	TODO: combine with @Elias Ervelä code that handles tournament data
 	TODO: load old data and only update new
+	TODO: Identify whether databases exist and choose between save_first_games() and save_new_games()
 	"""
 
 	# First tournament day
@@ -151,8 +180,8 @@ def main():
 
 	# Create new players (test version)
 	# TODO: check from sheets data, who are new players (not in "players" list), and create them (@Elias Ervelä)
-	new_intermediate_player_names = ["Elias Ervelä"]
-	new_experienced_player_names = ["Santeri Salomaa", "Kimmo Pyyhtiä"]
+	new_intermediate_player_names = ["Elias Ervelä", "Onni Snåre", "Kaisa Hakkarainen", "Kerttu Pusa"]
+	new_experienced_player_names = ["Santeri Salomaa", "Kimmo Pyyhtiä", "Testi"]
 	for name in new_intermediate_player_names:
 		new_player = newPlayer(name, 1)
 		players.append(new_player)
@@ -162,9 +191,14 @@ def main():
 
 	# New games from a tournament data 
 	# TODO: games from sheets data (@Elias Ervelä)
-	data1 = ["Santeri Salomaa", "Elias Ervelä", 0]
-	data2 = ["Santeri Salomaa", "Kimmo Pyyhtiä", 1]
-	data = [data1, data2]
+	data1 = ["Santeri Salomaa", "Elias Ervelä", 1]
+	data2 = ["Santeri Salomaa", "Kimmo Pyyhtiä", 0]
+	data3 = ["Onni Snåre", "Elias Ervelä", 1]
+	data4 = ["Kimmo Pyyhtiä", "Onni Snåre", 0]
+	data5 = ["Kerttu Pusa", "Santeri Salomaa", 0.5]
+	data6 = ["Kaisa Hakkarainen", "Santeri Salomaa", 0]
+	data = [data1, data2, data3, data4, data5, data6]
+	#data = from_table_to_games_list(filename)
 	games = []
 	for d in data:
 		w = find_player(players, d[0])
@@ -181,7 +215,7 @@ def main():
 		p.update_elo_and_history(date, new_elo)
 	save_players(players)
 
-
+"""
 	# Second tournament day
 	date = "2023-02-16"
 
@@ -206,6 +240,69 @@ def main():
 		new_elo = p.calculate_new_elo_tournament(new_games)
 		p.update_elo_and_history(date, new_elo)
 	save_players(players)
+
+	for p in players:
+		new_elo = p.calculate_new_elo_tournament(games)
+		p.update_elo_and_history(date, new_elo)
+	save_players(players)
+"""
+#_____________________________________________________________________
+#Data lookup
+
+def data_query():
+	os.system("cls")
+	x = input("Input the name of the player you wish to look up or press enter to go back: ")
+	if x == "":
+		return
+	players = []
+	players = load_players()
+	found = False
+	for p in players:
+		if p.get_name() == x:
+			found = True
+			print_player_games(p)
+			break
+	if found == False:
+		input("No player with that name")
+	data_query()
+	return
+
+def print_player_games(x):
+	games = []
+	games = load_games()
+	x.print_player()
+	found = False
+	for peli in games:
+		if (peli.get_white_name() == x.get_name() or peli.get_black_name() == x.get_name()):
+			found = True
+			peli.print_game(x.get_name())
+	if found == False:
+		print("No games found")
+	input()
+
+
+#_______________________________________________________________________
+#_______________________________________________________________________
+	
+def main():
+	#TODO check if player- and gamedatabases exist -> relay that information to input_tournament()
+
+
+	#1: Input tournament data from a csv file
+	#2: Look up player specific data
+	while True:
+		os.system('cls')
+		command = input("Input a command \n1: Input tournament data \n2: Look at a profile \n")
+		os.system('cls')
+		match command:
+			case "1":
+				input_tournament()
+			case "2":
+				data_query()
+			case "":
+				exit()
+			case _:
+				print("Incorrect command")
 
 
 if __name__ == "__main__":

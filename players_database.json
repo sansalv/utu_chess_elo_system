@@ -1,47 +1,79 @@
 [
     {
         "name": "Elias Ervel\u00e4",
-        "elo": 1168,
+        "elo": 929,
         "elo_history": [
             [
                 "2023-02-15",
-                1121
-            ],
-            [
-                "2023-02-16",
-                1168
+                929
             ]
         ],
         "games_played": 2
     },
     {
-        "name": "Santeri Salomaa",
-        "elo": 1331,
+        "name": "Onni Sn\u00e5re",
+        "elo": 1185,
         "elo_history": [
             [
                 "2023-02-15",
-                1443
-            ],
+                1185
+            ]
+        ],
+        "games_played": 2
+    },
+    {
+        "name": "Kaisa Hakkarainen",
+        "elo": 993,
+        "elo_history": [
             [
-                "2023-02-16",
-                1331
+                "2023-02-15",
+                993
+            ]
+        ],
+        "games_played": 1
+    },
+    {
+        "name": "Kerttu Pusa",
+        "elo": 1057,
+        "elo_history": [
+            [
+                "2023-02-15",
+                1057
+            ]
+        ],
+        "games_played": 1
+    },
+    {
+        "name": "Santeri Salomaa",
+        "elo": 1392,
+        "elo_history": [
+            [
+                "2023-02-15",
+                1392
             ]
         ],
         "games_played": 4
     },
     {
         "name": "Kimmo Pyyhti\u00e4",
-        "elo": 1501,
+        "elo": 1443,
         "elo_history": [
             [
                 "2023-02-15",
-                1436
-            ],
-            [
-                "2023-02-16",
-                1501
+                1443
             ]
         ],
         "games_played": 2
+    },
+    {
+        "name": "Testi",
+        "elo": 1500,
+        "elo_history": [
+            [
+                "2023-02-15",
+                1500
+            ]
+        ],
+        "games_played": 0
     }
 ]
