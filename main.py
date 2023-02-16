@@ -7,7 +7,7 @@ def generate_fakeplayers():
 	players = []
 	new_player_names = ["Onni Snåre", "Elias Ervelä", "Kimmo Pyyhtiä", "Santeri Salomaa", "Lauri Maila"]
 	for name in new_player_names:
-		new_player = newPlayer(name)
+		new_player = newPlayer(name, 0)
 		players.append(new_player)
 	return players
 
@@ -30,47 +30,76 @@ def generate_fakegames():
 		games.append(g)
 	return games
 
-def newPlayer(name):
-	id = 0
-	new_player = player.Player(name, 1500, [], 0)
+# Create new player instance. Starting Elo rating depends on the level
+# level 0 = beginner league player, level 1 = experienced league player
+def newPlayer(name, level):
+	if level == 0:
+		starting_elo = 800
+	else:
+		starting_elo = 1500
+	new_player = player.Player(name, starting_elo, [], 0)
 	return new_player
 
+# Return Player (instance) from name (string)
 def find_player(players, name):
 	for p in players:
 		if p.get_name() == name:
 			return p
 	return 0
+#_______________________________________________________________________
+# Methods for saving and loading the json data
 
 def save_players(players):
+	# Make a list of Player dictionaries
 	playerstable = [vars(p) for p in players]
-	json_format = json.dumps(playerstable, indent=2)
+	json_format = json.dumps(playerstable, indent=4)
 	with open("players_database.json", "w") as db:
 		db.write(json_format)
 
+def save_games(games):
+	# Make a list of Game dictionaries
+	gamestable = [vars(g) for g in games]
+	json_format = json.dumps(gamestable, indent=4)
+	with open("games_database.json", "w") as db:
+		db.write(json_format)
+
+# TODO: Finish this method. Now only makes player dictionaries
 def load_players():
     with open("players_database.json", "r") as db:
         json_format = db.read()
     players_dictionary = json.loads(json_format)
     return players_dictionary
 
-def save_games(games):
-	gamestable = [vars(g) for g in games]
-	json_format = json.dumps(gamestable, indent=2)
-	with open("games_database.json", "w") as db:
-		db.write(json_format)
-
+# TODO: Finish this method. Now only makes game dictionaries
 def load_games():
     with open("games_database.json", "r") as db:
         json_format = db.read()
     games_dictionary = json.loads(json_format)
     return games_dictionary
 
+#_______________________________________________________________________
 def input_tournament():
+	"""
+	TODO: load old data and only update new
+	"""
+
+	# TODO: Input(date) or something
 	date = "2023-02-15"
 	# Create players (test version)
 	# TODO: load old players and new players from sheets data
 	players = []
 	players = generate_fakeplayers()
+
+	# Create new players (test version)
+	# TODO: check from sheets data, who are new players (not in "players" list), and create them (@Elias Ervelä)
+	new_beginner_player_names = ["Elias Ervelä"]
+	new_experienced_player_names = ["Santeri Salomaa", "Kimmo Pyyhtiä"]
+	for name in new_beginner_player_names:
+		new_player = newPlayer(name, 0)
+		players.append(new_player)
+	for name in new_experienced_player_names:
+		new_player = newPlayer(name, 1)
+		players.append(new_player)
 
 	# New games from a tournament data
 	# date, white_name, white_elo, black_name, black_elo, white_score
@@ -128,10 +157,9 @@ def print_player_games(x):
 #_______________________________________________________________________
 	
 def main():
-	#Ends
-	#Input tournament data
-	#Look up player specific data
-	#
+	#Main 
+	#1: Input tournament data from a csv file
+	#2: Look up player specific data
 	while True:
 		os.system('cls')
 		command = input("Input a command \n1: Input tournament data \n2: Look at a profile \n")

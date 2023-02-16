@@ -4,7 +4,6 @@ class Player:
         self.elo = elo
         self.elo_history = elo_history
         self.games_played = games_played
-        #self.id = id
 
     # Setters and getters:
     def get_name(self):
@@ -15,28 +14,23 @@ class Player:
         return self.elo
     def get_elo_history(self):
         return self.elo_history
-    
+    # Setter for elo and elo_history
     def update_elo_and_history(self, date, new_elo):
         self.elo = new_elo
         self.elo_history.append((date, new_elo))
 
     """
     Functions:
-    - player_as_dictionary()            = Return player as a dictionary (for json)
     - calculate_new_elo_single(...)     = Return new Elo from a single game
-    - calculate_new_elo_tournament(...) = Return new Elo from many games
+    - calculate_new_elo_tournament(...) = Return new Elo from many games (whole tournament)
     """
 
     def calculate_new_elo_single(self, opponent_elo, score):
         """
         Method that returns new Elo rating from a SINGLE game
-
-        To understand Elo, read:
-        https://www.omnicalculator.com/sports/elo
-        https://en.wikipedia.org/wiki/Elo_rating_system
         """
 
-        # Define the K-factor form number of games (=n)
+        # Define the K-factor from games played
         if self.games_played <= 10:
             K = 128
         elif self.games_played <= 20:
@@ -60,7 +54,7 @@ class Player:
         Method that returns new Elo rating from games list (from whole tournament day)
         """
         
-        # Define the K-factor form number of games previous to these (=n)
+        # Define the K-factor from games played
         # (New players get bigger Elo correction jumps)
         if self.games_played <= 10:
             K = 128
