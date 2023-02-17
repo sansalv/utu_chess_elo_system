@@ -99,13 +99,15 @@ def from_table_to_games_list(file_location, verbose=False):
 
     return games_list
 
-def games_to_games_instances(raw_games_list, players):
+def game_lists_to_game_instances(date, raw_games_list, players):
 	"""
     Turns raw list of [white_name, black_name, white_result] elements to list of game instances.
     The raw list of games comes from method from_table_to_games_list(...).
     
 	Parameters
 	----------
+    date : string
+        In format yyyy-mm-dd.
 	raw_games_list : list of [string, string, float]
 	players : list of Player instances
 
@@ -117,6 +119,6 @@ def games_to_games_instances(raw_games_list, players):
 	for g in raw_games_list:
 		w = player.find_player(players, g[0])
 		b = player.find_player(players, g[1])
-		g = Game("1.1.2023", g[0], w.get_elo(), g[1], b.get_elo(), g[2])
+		g = Game(date, g[0], w.get_elo(), g[1], b.get_elo(), g[2])
 		games.append(g)
 	return games
