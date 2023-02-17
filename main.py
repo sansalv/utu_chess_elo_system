@@ -16,7 +16,6 @@ def from_table_to_games_list(file_location, verbose=False):
 			verbose: if True, print table and games_list
 
 		Returns: List of games, where every games are in format [white_name, black_name, white_result]
-
 	"""
 	# Read the table from file_location
     games_table = pd.read_csv(file_location, dtype=str, index_col=0)
@@ -61,6 +60,25 @@ def from_table_to_games_list(file_location, verbose=False):
 
     return games_list
 
+def games_to_games_instances(raw_games_list, players):
+	"""
+    Turns raw list of [white_name, black_name, white_result] elements to list of game instances.
+    The raw list of games comes from method from_table_to_games_list(file_location).
+    
+		Variables:
+			raw_games_list: List in [string, string, int] format
+			players: List of Player instances
+
+		Returns: List of Game instances
+    """
+	games = []
+	for g in raw_games_list:
+		w = find_player(players, g[0])
+		b = find_player(players, g[1])
+		g = game.Game("1.1.2023", g[0], w.get_elo(), g[1], b.get_elo(), g[2])
+		games.append(g)
+	return games
+    
 #_______________________________________________________________________
 
 # Gets list of players name from tournament table (pandas dataframe) and returns list of strings.
@@ -86,34 +104,8 @@ def generate_fakegames():
 	data5 = ["Onni Snåre", "Elias Ervelä", 1]
 	data = [data1, data2, data3, data4, data5]
 	games = []
-	for d in data:
-		w = find_player(players, d[0])
-		b = find_player(players, d[1])
-		w_elo = w.get_elo()
-		b_elo = b.get_elo()
-
-		g = game.Game("1.1.2023", d[0], w_elo, d[1], b_elo, d[2])
-		games.append(g)
+	games = games_to_games_instances(data)
 	return games
-
-"""
-Not finished (t. Santeri)...
-
-def generate_randomfakegames(players):
-	results = [0, 0.5, 1]
-	data = []
-	players_by_name = [p.get_name() for p in players]
-	for p in players_by_name:
-		opponents = [x for x in players_by_name if x != p]
-		for o in opponents:
-			names = [p, o]
-			rd.shuffle(names)  
-			g = names.append[rd.choice(results)]
-			data.append(g)
-		players_by_name = [x for x in players_by_name if x != p]
-	return data
-"""
-
 
 # Create new player instance. Starting Elo rating depends on the level
 # level 0 = beginner league, level 1 = intermediate league, level 2 = experienced league
@@ -176,15 +168,7 @@ def input_tournament():
 	data6 = ["Kaisa Hakkarainen", "Santeri Salomaa", 0]
 	data = [data1, data2, data3, data4, data5, data6]
 	# data = from_table_to_games_list(filename)
-	games = []
-	for d in data:
-		w = find_player(players, d[0])
-		b = find_player(players, d[1])
-		w_elo = w.get_elo()
-		b_elo = b.get_elo()
-		# game = (date, white_name, white_elo, black_name, black_elo, white_score)
-		g = game.Game(date, d[0], w_elo, d[1], b_elo, d[2])
-		games.append(g)
+	games = games_to_games_instances(data)
 	sl.save_first_games(games)
 
 	for p in players:
@@ -202,15 +186,7 @@ def input_tournament():
 	data1 = ["Santeri Salomaa", "Elias Ervelä", 0.5]
 	data2 = ["Santeri Salomaa", "Kimmo Pyyhtiä", 0]
 	data = [data1, data2]
-	new_games = []
-	for d in data:
-		w = find_player(players, d[0])
-		b = find_player(players, d[1])
-		w_elo = w.get_elo()
-		b_elo = b.get_elo()
-		# game = (date, white_name, white_elo, black_name, black_elo, white_score)
-		g = game.Game(date, d[0], w_elo, d[1], b_elo, d[2])
-		new_games.append(g)
+	new_games = games_to_games_instances(data)
 	sl.save_new_games(new_games) # Extend games database
 
 	for p in players:
