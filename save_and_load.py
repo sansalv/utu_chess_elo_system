@@ -6,25 +6,27 @@ import json
 
 def save_players(players, filename = "players_database.json"):
 	"""
-	Method for saving players list to database
+	Method for saving players list to database.
 	
-        Variables:
-            players: List of Players instances you want to save
+    Parameters
+    ----------
+	players : list of Player instances
 	"""
 	# Make a list of Player dictionaries
 	playerstable = [vars(p) for p in players]
 	json_format = json.dumps(playerstable, indent = 4)
 	with open(filename, "w") as db:
 		db.write(json_format)
-		
+
 # Update games database
 # Read old json, extend list to new data and dump all to json
 def save_new_games(new_games, filename = "games_database.json"):
 	"""
-	Method for saving NEW games to games database
+	Method for saving NEW games to games database.
 	
-        Variables:
-            first_games: List of Game instances you want to save
+    Parameters
+    ----------
+    first_games : list of Game instances
 	"""
 	# Read old json
 	with open(filename, "r") as db:
@@ -43,10 +45,11 @@ def save_new_games(new_games, filename = "games_database.json"):
 
 def save_first_games(first_games, filename = "games_database.json"):
 	"""
-	Method for saving FIRST games to EMPTY database
+	Method for saving FIRST games to EMPTY database.
 	
-        Variables:
-            first_games: List of Game instances you want to save
+    Parameters
+    ----------
+    first_games : list of Game instances
 	"""
 	# Make a list of Game dictionaries
 	gamestable = [vars(g) for g in first_games]
@@ -56,9 +59,11 @@ def save_first_games(first_games, filename = "games_database.json"):
 
 def load_players():
 	"""
-	Method for loading players list from database
+	Method for loading whole players list from database.
 	
-        Returns: players list of all Player instances in the database
+    Returns
+	-------
+	players : list of Player instances
 	"""
 	with open("players_database.json", "r") as db:
 		json_format = db.read()
@@ -70,9 +75,11 @@ def load_players():
 
 def load_games(filename = "games_database.json"):
 	"""
-	Method for loading games list from database
+	Method for loading whole games list from database.
 	
-        Returns: games list of all Game instances in the database
+    Returns
+	-------
+	games : list of Game instances
 	"""
 	with open(filename, "r") as db:
 		json_format = db.read()
