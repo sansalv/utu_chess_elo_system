@@ -1,3 +1,9 @@
+import pandas as pd
+
+# TODO: document and comment this libraby
+
+# After Player class there are methods involving Player instances
+
 class Player:
     def __init__(self, name, elo, elo_history, games_played):
         self.name = name
@@ -18,12 +24,6 @@ class Player:
     def update_elo_and_history(self, date, new_elo):
         self.elo = new_elo
         self.elo_history.append((date, new_elo))
-
-    """
-    Functions:
-    - calculate_new_elo_single(...)     = Return new Elo from a single game
-    - calculate_new_elo_tournament(...) = Return new Elo from many games (whole tournament)
-    """
 
     def calculate_new_elo_single(self, opponent_elo, score):
         """
@@ -102,3 +102,44 @@ class Player:
     def print_player(self):
         # Name, elo history
         print(self.name + " (" + str(self.elo) + ")")
+
+#_______________________________________________________________________
+
+# Methods outside of class:
+
+# Create new player instance. Starting Elo rating depends on the level
+# level 0 = beginner league, level 1 = intermediate league, level 2 = experienced league
+def newPlayer(name, level):
+    if level == 0: 		# starting at beginner league
+        starting_elo = 500
+    elif level == 1: 	# starting at intermediate league
+        starting_elo = 1000
+    else: 				# starting at experienced league
+        starting_elo = 1500
+    new_player = Player(name, starting_elo, [], 0)
+    return new_player
+
+# Return Player (instance) from name (string)
+def find_player(players, name):
+	for p in players:
+		if p.get_name() == name:
+			return p
+	return 0
+
+def get_players_from_table(file_location):
+	"""
+	Gets list of players name from tournament table (pandas dataframe) and returns list of strings.
+
+	Parameters
+	----------
+	file_location : string
+		Location of the table of tournament games. In which Indexes and columns have players names.
+	
+	Returns
+	-------
+	player_list : list of strings
+		Player names in list of strings.
+	"""
+	games_table = pd.read_csv(file_location, dtype=str, index_col=0)
+	player_list = list(games_table.index)
+	return player_list
