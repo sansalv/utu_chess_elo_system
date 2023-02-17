@@ -1,79 +1,425 @@
 [
     {
-        "name": "Elias Ervel\u00e4",
-        "elo": 929,
+        "name": "Tuomas Vaimala",
+        "elo": 372,
         "elo_history": [
             [
                 "2023-02-15",
-                929
-            ]
-        ],
-        "games_played": 2
-    },
-    {
-        "name": "Onni Sn\u00e5re",
-        "elo": 1185,
-        "elo_history": [
+                372
+            ],
             [
                 "2023-02-15",
-                1185
-            ]
-        ],
-        "games_played": 2
-    },
-    {
-        "name": "Kaisa Hakkarainen",
-        "elo": 993,
-        "elo_history": [
+                372
+            ],
             [
                 "2023-02-15",
-                993
-            ]
-        ],
-        "games_played": 1
-    },
-    {
-        "name": "Kerttu Pusa",
-        "elo": 1057,
-        "elo_history": [
-            [
-                "2023-02-15",
-                1057
-            ]
-        ],
-        "games_played": 1
-    },
-    {
-        "name": "Santeri Salomaa",
-        "elo": 1392,
-        "elo_history": [
-            [
-                "2023-02-15",
-                1392
+                372
             ]
         ],
         "games_played": 4
     },
     {
-        "name": "Kimmo Pyyhti\u00e4",
-        "elo": 1443,
+        "name": "Samuel Nipala",
+        "elo": 436,
         "elo_history": [
             [
                 "2023-02-15",
-                1443
+                436
+            ],
+            [
+                "2023-02-15",
+                436
+            ],
+            [
+                "2023-02-15",
+                436
             ]
         ],
-        "games_played": 2
+        "games_played": 5
     },
     {
-        "name": "Testi",
-        "elo": 1500,
+        "name": "Aleksi Varho",
+        "elo": 436,
         "elo_history": [
             [
                 "2023-02-15",
-                1500
+                436
+            ],
+            [
+                "2023-02-15",
+                436
+            ],
+            [
+                "2023-02-15",
+                436
             ]
         ],
-        "games_played": 0
+        "games_played": 5
+    },
+    {
+        "name": "Otso Lauerma",
+        "elo": 692,
+        "elo_history": [
+            [
+                "2023-02-15",
+                692
+            ],
+            [
+                "2023-02-15",
+                692
+            ],
+            [
+                "2023-02-15",
+                692
+            ]
+        ],
+        "games_played": 3
+    },
+    {
+        "name": "Janne (Sukunimi unknown)",
+        "elo": 436,
+        "elo_history": [
+            [
+                "2023-02-15",
+                436
+            ],
+            [
+                "2023-02-15",
+                436
+            ],
+            [
+                "2023-02-15",
+                436
+            ]
+        ],
+        "games_played": 1
+    },
+    {
+        "name": "Aurora Willman",
+        "elo": 692,
+        "elo_history": [
+            [
+                "2023-02-15",
+                692
+            ],
+            [
+                "2023-02-15",
+                692
+            ],
+            [
+                "2023-02-15",
+                692
+            ]
+        ],
+        "games_played": 5
+    },
+    {
+        "name": "Kira Laukkanen",
+        "elo": 436,
+        "elo_history": [
+            [
+                "2023-02-15",
+                436
+            ],
+            [
+                "2023-02-15",
+                436
+            ],
+            [
+                "2023-02-15",
+                436
+            ]
+        ],
+        "games_played": 3
+    },
+    {
+        "name": "Waltteri Hatulainen",
+        "elo": 1128,
+        "elo_history": [
+            [
+                "2023-02-15",
+                1128
+            ],
+            [
+                "2023-02-15",
+                1128
+            ]
+        ],
+        "games_played": 6
+    },
+    {
+        "name": "Ossi Airaksinen",
+        "elo": 1128,
+        "elo_history": [
+            [
+                "2023-02-15",
+                1128
+            ],
+            [
+                "2023-02-15",
+                1128
+            ]
+        ],
+        "games_played": 4
+    },
+    {
+        "name": "Jaakko R\u00e4kk\u00f6l\u00e4inen",
+        "elo": 808,
+        "elo_history": [
+            [
+                "2023-02-15",
+                808
+            ],
+            [
+                "2023-02-15",
+                808
+            ]
+        ],
+        "games_played": 7
+    },
+    {
+        "name": "Otso Helminen",
+        "elo": 1064,
+        "elo_history": [
+            [
+                "2023-02-15",
+                1064
+            ],
+            [
+                "2023-02-15",
+                1064
+            ]
+        ],
+        "games_played": 6
+    },
+    {
+        "name": "Kimmo Pyyhti\u00e4",
+        "elo": 936,
+        "elo_history": [
+            [
+                "2023-02-15",
+                936
+            ],
+            [
+                "2023-02-15",
+                936
+            ]
+        ],
+        "games_played": 6
+    },
+    {
+        "name": "Reea Ruusuvuori",
+        "elo": 936,
+        "elo_history": [
+            [
+                "2023-02-15",
+                936
+            ],
+            [
+                "2023-02-15",
+                936
+            ]
+        ],
+        "games_played": 5
+    },
+    {
+        "name": "Arman Anzanpour",
+        "elo": 808,
+        "elo_history": [
+            [
+                "2023-02-15",
+                808
+            ],
+            [
+                "2023-02-15",
+                808
+            ]
+        ],
+        "games_played": 4
+    },
+    {
+        "name": "Vilppu Saarinen",
+        "elo": 936,
+        "elo_history": [
+            [
+                "2023-02-15",
+                936
+            ],
+            [
+                "2023-02-15",
+                936
+            ]
+        ],
+        "games_played": 5
+    },
+    {
+        "name": "Garo Garabetian",
+        "elo": 1192,
+        "elo_history": [
+            [
+                "2023-02-15",
+                1192
+            ],
+            [
+                "2023-02-15",
+                1192
+            ]
+        ],
+        "games_played": 5
+    },
+    {
+        "name": "Valtteri Alatalo",
+        "elo": 1128,
+        "elo_history": [
+            [
+                "2023-02-15",
+                1128
+            ],
+            [
+                "2023-02-15",
+                1128
+            ]
+        ],
+        "games_played": 6
+    },
+    {
+        "name": "Jere Aaros",
+        "elo": 1064,
+        "elo_history": [
+            [
+                "2023-02-15",
+                1064
+            ],
+            [
+                "2023-02-15",
+                1064
+            ]
+        ],
+        "games_played": 5
+    },
+    {
+        "name": "Elias Ervel\u00e4",
+        "elo": 872,
+        "elo_history": [
+            [
+                "2023-02-15",
+                872
+            ],
+            [
+                "2023-02-15",
+                872
+            ]
+        ],
+        "games_played": 5
+    },
+    {
+        "name": "Otto Hanski",
+        "elo": 1564,
+        "elo_history": [
+            [
+                "2023-02-15",
+                1564
+            ]
+        ],
+        "games_played": 7
+    },
+    {
+        "name": "Jesse Huhtala",
+        "elo": 1308,
+        "elo_history": [
+            [
+                "2023-02-15",
+                1308
+            ]
+        ],
+        "games_played": 4
+    },
+    {
+        "name": "Ville Kautto",
+        "elo": 1756,
+        "elo_history": [
+            [
+                "2023-02-15",
+                1756
+            ]
+        ],
+        "games_played": 6
+    },
+    {
+        "name": "Joel Ruusuvuori",
+        "elo": 1372,
+        "elo_history": [
+            [
+                "2023-02-15",
+                1372
+            ]
+        ],
+        "games_played": 5
+    },
+    {
+        "name": "Maksym Rubtsov",
+        "elo": 1884,
+        "elo_history": [
+            [
+                "2023-02-15",
+                1884
+            ]
+        ],
+        "games_played": 6
+    },
+    {
+        "name": "Daniel Pavlov",
+        "elo": 1244,
+        "elo_history": [
+            [
+                "2023-02-15",
+                1244
+            ]
+        ],
+        "games_played": 6
+    },
+    {
+        "name": "Santeri Salomaa",
+        "elo": 1628,
+        "elo_history": [
+            [
+                "2023-02-15",
+                1628
+            ]
+        ],
+        "games_played": 5
+    },
+    {
+        "name": "Ville Koponen",
+        "elo": 1436,
+        "elo_history": [
+            [
+                "2023-02-15",
+                1436
+            ]
+        ],
+        "games_played": 5
+    },
+    {
+        "name": "Eetu Rantala",
+        "elo": 1372,
+        "elo_history": [
+            [
+                "2023-02-15",
+                1372
+            ]
+        ],
+        "games_played": 5
+    },
+    {
+        "name": "Nikola Tsarigradski",
+        "elo": 1436,
+        "elo_history": [
+            [
+                "2023-02-15",
+                1436
+            ]
+        ],
+        "games_played": 5
     }
 ]

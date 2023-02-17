@@ -1,7 +1,6 @@
 import pandas as pd
 
 # TODO: document and comment this libraby
-
 # After Player class there are methods involving Player instances
 
 class Player:

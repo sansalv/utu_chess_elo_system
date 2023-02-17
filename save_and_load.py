@@ -43,6 +43,7 @@ def save_new_games(new_games, filename = "games_database.json"):
 	with open(filename, "w") as db:
 		db.write(updated_json)
 
+# TODO: Check if obsolite (save_new_games does the same)
 def save_first_games(first_games, filename = "games_database.json"):
 	"""
 	Method for saving FIRST games to EMPTY database.
