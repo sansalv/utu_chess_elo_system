@@ -1,8 +1,9 @@
-import json
 import player
 import game
+import save_and_load as sl
 import pandas as pd
 import os
+import random as rd
 #_______________________________________________________________________
 
 
@@ -95,8 +96,28 @@ def generate_fakegames():
 		games.append(g)
 	return games
 
+"""
+Not finished (t. Santeri)...
+
+def generate_randomfakegames(players):
+	results = [0, 0.5, 1]
+	data = []
+	players_by_name = [p.get_name() for p in players]
+	for p in players_by_name:
+		opponents = [x for x in players_by_name if x != p]
+		for o in opponents:
+			names = [p, o]
+			rd.shuffle(names)  
+			g = names.append[rd.choice(results)]
+			data.append(g)
+		players_by_name = [x for x in players_by_name if x != p]
+	return data
+"""
+
+
 # Create new player instance. Starting Elo rating depends on the level
 # level 0 = beginner league, level 1 = intermediate league, level 2 = experienced league
+# TODO: This can be moved to player.py
 def newPlayer(name, level):
 	if level == 0: 		# starting at beginner league
 		starting_elo = 500
@@ -113,67 +134,13 @@ def find_player(players, name):
 		if p.get_name() == name:
 			return p
 	return 0
-#_______________________________________________________________________
-# Methods for saving and loading the json data
-
-def save_players(players, filename = "players_database.json"):
-	# Make a list of Player dictionaries
-	playerstable = [vars(p) for p in players]
-	json_format = json.dumps(playerstable, indent = 4)
-	with open(filename, "w") as db:
-		db.write(json_format)
-
-def save_first_games(first_games, filename = "games_database.json"):
-	# Make a list of Game dictionaries
-	gamestable = [vars(g) for g in first_games]
-	json_format = json.dumps(gamestable, indent = 4)
-	with open(filename, "w") as db:
-		db.write(json_format)
-
-# Update games database
-# Read old json, extend list to new data and dump all to json
-def save_new_games(new_games, filename = "games_database.json"):
-
-	# Read old json
-	with open(filename, "r") as db:
-		old_json = db.read()
-	game_dictionaries = json.loads(old_json)
-
-	# List of new game dictionaries to new json data
-	newgamestable = [vars(g) for g in new_games]
-	# Extend old data to new games
-	game_dictionaries.extend(newgamestable)
-	updated_json  = json.dumps(game_dictionaries, indent = 4)
-
-	# Write the updated json
-	with open(filename, "w") as db:
-		db.write(updated_json)
-
-def load_players():
-	with open("players_database.json", "r") as db:
-		json_format = db.read()
-	player_dictionaries = json.loads(json_format)
-	players = []
-	for j in player_dictionaries:
-		players.append(player.Player(**j))
-	return players
-
-def load_games(filename = "games_database.json"):
-	with open(filename, "r") as db:
-		json_format = db.read()
-	game_dictionaries = json.loads(json_format)
-	games = []
-	for j in game_dictionaries:
-		games.append(game.Game(**j))
-	return games
-
 
 #_______________________________________________________________________
 #Tournament data input
 
 def input_tournament():
 	filename = input("Insert filename of the tournament .csv-file: ")
-	players = load_players()
+	players = sl.load_players()
 	"""
 	Here input_tournament() handles tournament data. Creates games and players from test data.
 	TODO: combine with @Elias Ervelä code that handles tournament data
@@ -208,7 +175,7 @@ def input_tournament():
 	data5 = ["Kerttu Pusa", "Santeri Salomaa", 0.5]
 	data6 = ["Kaisa Hakkarainen", "Santeri Salomaa", 0]
 	data = [data1, data2, data3, data4, data5, data6]
-	#data = from_table_to_games_list(filename)
+	# data = from_table_to_games_list(filename)
 	games = []
 	for d in data:
 		w = find_player(players, d[0])
@@ -218,19 +185,19 @@ def input_tournament():
 		# game = (date, white_name, white_elo, black_name, black_elo, white_score)
 		g = game.Game(date, d[0], w_elo, d[1], b_elo, d[2])
 		games.append(g)
-	save_first_games(games)
+	sl.save_first_games(games)
 
 	for p in players:
 		new_elo = p.calculate_new_elo_tournament(games)
 		p.update_elo_and_history(date, new_elo)
-	save_players(players)
+	sl.save_players(players)
 
 """
 	# Second tournament day
 	date = "2023-02-16"
 
 	players = []
-	players = load_players()
+	players = sl.load_players()
 
 	data1 = ["Santeri Salomaa", "Elias Ervelä", 0.5]
 	data2 = ["Santeri Salomaa", "Kimmo Pyyhtiä", 0]
@@ -244,20 +211,20 @@ def input_tournament():
 		# game = (date, white_name, white_elo, black_name, black_elo, white_score)
 		g = game.Game(date, d[0], w_elo, d[1], b_elo, d[2])
 		new_games.append(g)
-	save_new_games(new_games) # Extend games database
+	sl.save_new_games(new_games) # Extend games database
 
 	for p in players:
 		new_elo = p.calculate_new_elo_tournament(new_games)
 		p.update_elo_and_history(date, new_elo)
-	save_players(players)
+	sl.save_players(players)
 
 	for p in players:
 		new_elo = p.calculate_new_elo_tournament(games)
 		p.update_elo_and_history(date, new_elo)
-	save_players(players)
+	sl.save_players(players)
 """
 #_____________________________________________________________________
-#Data lookup
+# Data lookup
 
 def data_query():
 	os.system("cls")
@@ -265,7 +232,7 @@ def data_query():
 	if x == "":
 		return
 	players = []
-	players = load_players()
+	players = sl.load_players()
 	found = False
 	for p in players:
 		if p.get_name() == x:
@@ -279,7 +246,7 @@ def data_query():
 
 def print_player_games(x):
 	games = []
-	games = load_games()
+	games = sl.load_games()
 	x.print_player()
 	found = False
 	for peli in games:
@@ -298,8 +265,8 @@ def main():
 	#TODO check if player- and gamedatabases exist -> relay that information to input_tournament()
 
 
-	#1: Input tournament data from a csv file
-	#2: Look up player specific data
+	# 1: Input tournament data from a csv file
+	# 2: Look up player specific data
 	while True:
 		os.system('cls')
 		command = input("Input a command \n1: Input tournament data \n2: Look at a profile \n")
