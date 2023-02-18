@@ -1,0 +1,1 @@
+- Fix the save players to database method. Only players who played new games should get new elo_history list append. Now there are duplicates.
