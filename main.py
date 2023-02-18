@@ -116,8 +116,10 @@ def main():
 	# 3: Print Elo leaderboard
 
 	while True:
+		# System clears are commented out because different commands work for Linux and Windows
+		#TODO: If-else or something that checks if the computer is Linux or Windows
 		#Linux:
-		system('clear')
+		#system('clear')
 		#Windows:
 		#os.system('cls')
 		command = input("\nInput a command \n1: Input tournament data \n2: Look at a profile \n3: Print TYLO leaderboard \n")
