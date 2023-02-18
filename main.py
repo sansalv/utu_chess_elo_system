@@ -3,17 +3,13 @@ import game
 import save_and_load as sl
 import pandas as pd
 #import os
-#from os import system
+from os import system
 import random as rd
 #_______________________________________________________________________
-# Tournament data input
+# Tournament data input. Creates games and players from csv data and updated databases.
 
 # TODO: Comment the end section of this
 def input_tournament():
-	"""
-	Here input_tournament() handles tournament data. Creates games and players from test data.
-	TODO: Combine with @Elias Ervelä code that handles tournament data
-	"""
 	
 	# Input tournament date and file location
 	date = input("Insert date of the tournament in yyyy-mm-dd:\n")
@@ -21,7 +17,7 @@ def input_tournament():
 
 	# Load old players from database
 	players = sl.load_players()
-	#_______________________________________________________________________
+	#___________________________________
 	# Check and create new players:
 
 	# Creates lists of player names from database and list of names from csv table
@@ -42,7 +38,8 @@ def input_tournament():
 		for name in new_player_names:
 			new_player = player.newPlayer(name, level)
 			players.append(new_player)
-	#_______________________________________________________________________
+	#___________________________________
+
 	# TODO: Comment these rest
 	raw_game_list = game.from_table_to_games_list(file_location)
 	games = game.game_lists_to_game_instances(date, raw_game_list, players)
@@ -54,8 +51,10 @@ def input_tournament():
 		p.update_elo_and_history(date, new_elo)
 	sl.save_players(players)
 	print("Updated players to players_database.json successfully.")
+
 #_____________________________________________________________________
 # Data lookup
+# TODO: Comment and document
 
 def data_query():
 	#os.system("cls")
@@ -90,6 +89,7 @@ def print_player_games(x):
 
 #_____________________________________________________________________
 # Print Elo leaderboard
+# TODO: Comment and document
 
 def print_elo_leaderboard():
 	players = sl.load_players()
@@ -99,6 +99,7 @@ def print_elo_leaderboard():
 	#system('clear')
 	#Windows:
 	#os.system('cls')
+	# TODO: print("TYLO rating leaderboard (last update: DATE):\n")
 	print("TYLO rating leaderboard:\n")
 	for p in players:
 		print(f"{i}: {p.get_elo()}, {p.get_name()}")
@@ -108,7 +109,7 @@ def print_elo_leaderboard():
 #_______________________________________________________________________
 	
 def main():
-	#TODO check if player- and gamedatabases exist -> relay that information to input_tournament()
+	#TODO: Comment and document
 
 	# 1: Input tournament data from a csv file
 	# 2: Look up player specific data
@@ -116,12 +117,12 @@ def main():
 
 	while True:
 		#Linux:
-		#system('clear')
+		system('clear')
 		#Windows:
 		#os.system('cls')
 		command = input("\nInput a command \n1: Input tournament data \n2: Look at a profile \n3: Print TYLO leaderboard \n")
 		#Linux:
-		#system('clear')
+		system('clear')
 		#Windows:
 		#os.system('cls')
 		match command:
