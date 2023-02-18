@@ -2,8 +2,9 @@ from termcolor import colored
 import player
 import pandas as pd
 
-# TODO: document and comment this libraby
-# After Player class there are methods involving Game instances
+# TODO: Comment and document rest of this libraby
+
+# After Game class there are methods involving Game instances
 
 class Game:
 
