@@ -6,4 +6,3 @@
 - Do edit player info (that changes also the games) to main()
 - Check if it's to better to save Player instances to json instead of their names in the games database
 - Do backups for the databases
-- Do if-else or something on main() that system clear commands can be implemented
