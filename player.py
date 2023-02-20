@@ -1,4 +1,7 @@
 import pandas as pd
+import matplotlib.pyplot as plt
+import datetime as dt
+import matplotlib.dates as mdates
 
 # TODO: Comment and document rest of this libraby
 
@@ -11,19 +14,22 @@ class Player:
         self.elo_history = elo_history
         self.games_played = games_played
 
-    # Setters and getters:
-    def get_name(self):
-        return self.name
-    def get_id(self):
-        return self.id
-    def get_elo(self):
-        return self.elo
-    def get_elo_history(self):
-        return self.elo_history
     # Setter for elo and elo_history
     def update_elo_and_history(self, date, new_elo):
         self.elo = new_elo
         self.elo_history.append((date, new_elo))
+
+    def plot_elo_history(self):
+        dates = [eh[0] for eh in self.elo_history]
+        x = [dt.datetime.strptime(d,"%Y-%m-%d").date() for d in dates]
+        y = [eh[1] for eh in self.elo_history]
+        plt.gca().xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d"))
+        plt.gca().xaxis.set_major_locator(mdates.DayLocator())
+        plt.plot(x,y, '-o')
+        plt.xlabel("Date")
+        plt.ylabel("TYLO rating")
+        plt.gcf().autofmt_xdate()
+        plt.show()
 
     def calculate_new_elo_single(self, opponent_elo, score):
         """
@@ -70,9 +76,9 @@ class Player:
         for g in games:
             white = False
             black = False
-            if self.name == g.get_white_name():
+            if self.name == g.white_name:
                 white = True
-            elif self.name == g.get_black_name():
+            elif self.name == g.black_name:
                 black = True
             else:
                 continue # Not your game
@@ -81,11 +87,11 @@ class Player:
             self.games_played += 1
 
             if white:
-                score = g.get_white_score()
-                opponent_elo = g.get_black_elo()
+                score = g.white_score
+                opponent_elo = g.black_elo
             else:
-                score = 1 - g.get_white_score()
-                opponent_elo = g.get_white_elo()
+                score = 1 - g.white_score
+                opponent_elo = g.white_elo
             score_sum += score
     
             expected_score = 1/(1 + 10**((opponent_elo - self.elo)/400))
@@ -100,8 +106,8 @@ class Player:
         return new_elo
 
     def print_player(self):
-        # Name, elo history
-        print(self.name + " (" + str(self.elo) + ")")
+        # Name (Elo)
+        print(f"Player: {self.name} ({self.elo})")
 
 #_______________________________________________________________________
 
@@ -116,13 +122,13 @@ def newPlayer(name, level):
         starting_elo = 1000
     else: 				# starting at experienced league
         starting_elo = 1500
-    new_player = Player(name, starting_elo, [], 0)
+    new_player = Player(name, starting_elo, [], 0) # elo_history = [] and games_played = 0
     return new_player
 
 # Return Player (instance) from name (string)
 def find_player(players, name):
 	for p in players:
-		if p.get_name() == name:
+		if p.name == name:
 			return p
 	return 0
 

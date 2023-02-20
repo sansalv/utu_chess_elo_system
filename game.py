@@ -16,28 +16,15 @@ class Game:
         self.black_elo = black_elo
         self.white_score = white_score
         
-    # Getters
-    def get_white_name(self):
-        return self.white_name
-    def get_black_name(self):
-        return self.black_name
-    def get_white_elo(self):
-        return self.white_elo
-    def get_black_elo(self):
-        return self.black_elo
-    def get_white_score(self):
-        return self.white_score
-    
     def print_game(self, name):
-        # Date / White name (rating) / black name (rating) / white_score
+        # Date / White name (rating) / Black name (rating) / Player's score
+        print(f"[{self.date}] {self.white_name} ({self.white_elo}) {self.black_name} ({self.black_elo})", end=' ')
         if (name == self.white_name and self.white_score == 1) or (name == self.black_name and self.white_score == 0):
-            print("[" + str(self.date) + "] " + self.white_name + " (" + str(self.white_elo) +") "+ self.black_name + " (" + str(self.black_elo) +") " + str(self.white_score)  + colored(" Victory", "yellow"))
+            print(colored("Victory", "yellow"))
+        elif (self.white_score == 0.5):
+            print(colored("Draw", "light_blue"))
         else:
-            if (self.white_score == 0.5):
-                print("[" + str(self.date) + "] " + self.white_name + " (" + str(self.white_elo) +") "+ self.black_name + " (" + str(self.black_elo) +") " + str(self.white_score)  + colored(" Tie", "light_blue"))
-            else:
-                print("[" + str(self.date) + "] " + self.white_name + " (" + str(self.white_elo) +") "+ self.black_name + " (" + str(self.black_elo) +") " + str(self.white_score)  + colored(" Defeat", "red"))
-
+            print(colored("Defeat", "red"))
 
 #_______________________________________________________________________
 # Methods to convert tournament .csv to games list:
