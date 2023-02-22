@@ -113,6 +113,23 @@ def game_lists_to_game_instances(date, raw_games_list, players, source_file):
 		games.append(g)
 	return games
 
+def from_games_csv_to_games_list(file_location):
+    """
+    Parameters
+    ----------
+    file_location : String
+        File location path of the file.
+    
+    Returns
+    -------
+    List of games in format [White Player, Black Player, White result]
+    """
+    free_games = pd.read_csv(file_location)
+    free_games_list = []
+    for i in range(len(free_games)):
+        free_games_list.append(list(free_games.iloc[i]))
+    return free_games_list
+
 # Get free games pairs
 def get_free_games_csv_pairs(new_files): # new_files is a sorted list (by datetime) of csv files
 
