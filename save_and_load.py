@@ -1,8 +1,16 @@
 import player
 import game
 import json
+import glob
 
 # Methods for saving and loading the json data
+
+def reset_json_database(database_file):
+	empty_dir_list = []
+	json_format = json.dumps(empty_dir_list)
+	with open(database_file, "w") as db:
+		db.write(json_format)
+	print(f"Database {database_file} resetted.")
 
 def save_players(players, filename = "players_database.json"):
 	"""
@@ -74,3 +82,38 @@ def load_games(filename = "games_database.json"):
 	for j in game_dictionaries:
 		games.append(game.Game(**j))
 	return games
+
+def save_input_source(source_name, filename = "inputed_files.txt"):
+	with open(filename, "a") as txt:
+		txt.write(source_name + "\n")
+
+def get_new_input_file_lists(filename = "inputed_files.txt"):
+	old_files = []
+	with open(filename, "r") as txt:
+		old_files = f.read().splitlines()
+
+	# New tournament file names that are not in inputed_files.txt
+	tournament_paths = glob.glob("tournament_data/*")
+	tournament_files = []
+	for path in tournament_paths:
+		tournament_files.append(path.split("/")[-1])
+
+	new_tournament_files = []
+	for f in tournament_files:
+		if f not in old_files:
+			new_tournament_files.append(f)
+
+
+	# New free games file names that are not in inputed_files.txt
+	free_games_paths = glob.glob("free_rated_games_data/*")
+	free_games_files = []
+	for path in free_games_paths:
+		free_games_files.append(path.split("/")[-1])
+
+	new_free_games_files = []
+	for f in tournament_files:
+		if f not in old_files:
+			new_free_games_files.append(f)
+
+	return new_tournament_files, new_free_games_files
+

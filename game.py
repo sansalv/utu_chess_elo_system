@@ -8,13 +8,14 @@ import pandas as pd
 
 class Game:
 
-    def __init__(self, date, white_name, white_elo, black_name, black_elo, white_score):
+    def __init__(self, date, white_name, white_elo, black_name, black_elo, white_score, source_file):
         self.date = date
         self.white_name = white_name
         self.black_name = black_name
         self.white_elo = white_elo
         self.black_elo = black_elo
         self.white_score = white_score
+        self.source_file = source_file
         
     def print_game(self, name):
         # Date / White name (rating) / Black name (rating) / Player's score
@@ -35,14 +36,14 @@ def from_table_to_games_list(file_location, verbose=False):
 
 	Parameters
 	----------
-	file_location : string
+	file_location : str
 		Location of the table of tournament games. In which Indexes and columns have players names, and in the cells there is info of who won. Eg. ww=white win, bl=black lose, bd=black draw.
 	verbose : bool
 		If True, print table and games_list.
 
 	Returns
 	-------
-	games_list : list of [string, string, float]
+	games_list : list of [str, str, float]
 	"""
 	# Read the table from file_location
     games_table = pd.read_csv(file_location, dtype=str, index_col=0)
@@ -87,26 +88,70 @@ def from_table_to_games_list(file_location, verbose=False):
 
     return games_list
 
-def game_lists_to_game_instances(date, raw_games_list, players):
+def game_lists_to_game_instances(date, raw_games_list, players, source_file):
 	"""
     Turns raw list of [white_name, black_name, white_result] elements to list of game instances.
-    The raw list of games comes from method from_table_to_games_list(...).
+    The raw list of games comes from either from_table_to_games_list(...) or from_games_csv_to_games_list(...).
     
-	Parameters
-	----------
-    date : string
+    Parameters
+    ----------
+    date : str
         In format yyyy-mm-dd.
-	raw_games_list : list of [string, string, float]
-	players : list of Player instances
+    raw_games_list : list of [str, str, float]
+    players : list of Player instances
+    source_file : str
 
-	Returns
-	-------
-	games : list of Game instances
+    Returns
+    -------
+    games : list of Game instances
     """
 	games = []
 	for g in raw_games_list:
 		w = player.find_player(players, g[0])
 		b = player.find_player(players, g[1])
-		g = Game(date, g[0], w.get_elo(), g[1], b.get_elo(), g[2])
+		g = Game(date, g[0], w.get_elo(), g[1], b.get_elo(), g[2], source_file)
 		games.append(g)
 	return games
+
+# Get free games pairs
+def get_free_games_csv_pairs(new_files): # new_files is a sorted list (by datetime) of csv files
+
+	# Filter only free games data (others are tournaments)
+	# This will leave games and new players
+	free_games = [f for f in new_files if f.split("_")[1] == "Free"]
+	# Free games csv pairs will be in the list free_games_with_new_players
+	n_free_games = len(free_games)/2
+	free_games_with_new_players = [[None, None] for i in range(n_free_games)]
+	
+	new_players_files = []
+	i = 0
+	for f in free_games:
+		t = f.split(" - ")[1]
+		if t == "Games Output.csv":
+			free_games_with_new_players[i][0] = f
+			i += 1
+		elif t == "New Players Output.csv":
+			new_players_files.append(f)
+		else:
+			print(f"\nFile {f} not identified. This file will be skipped. Press enter to continue.")
+			input()
+
+	# Pair the new players data to the free games data
+
+	# Iterate free games files
+	for f_pair in free_games_with_new_players:
+		# Free games date
+		f_pair_date = f_pair[0].split("_")[0]
+		# Find matching date from new_players_files
+		for new_players_file in new_players_files:
+			new_players_file_date = new_players_file.split("_")[0]
+			# If the date matches, make the pair
+			if f_pair_date == new_players_file_date:
+				f_pair[1] = new_players_file
+
+	# Check that every entry has a pair
+	for f_pair in free_games_with_new_players:
+		if f_pair[0] == None or f_pair[1] == None:
+			raise Exception(f"Free games name ERROR: free games csv entry {f_pair} is not correct format. Check data names.")
+
+	return free_games_with_new_players
