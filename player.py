@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import datetime as dt
 import matplotlib.dates as mdates
+import numpy as np
 
 # TODO: Comment and document rest of this libraby
 
@@ -149,3 +150,34 @@ def get_players_from_table(file_location):
 	games_table = pd.read_csv(file_location, dtype=str, index_col=0)
 	player_list = list(games_table.index)
 	return player_list
+
+def get_unique_players_from_games_csv(file_location):
+    """
+    Parameters
+    ----------
+    file_location : String
+        File location path of the file.
+
+    Returns
+    -------
+    List of String. All unique players from columns "White Player" and "Black Player".
+    """
+    free_games = pd.read_csv(file_location)
+    return list(np.unique(np.hstack([free_games["White Player"],free_games["Black Player"]])))
+
+def get_new_players_with_level_from_games_csv(file_location):
+    """
+    Parameters
+    ----------
+    file_location : String
+        File location path of the file.
+    
+    Returns
+    -------
+    List of tuples, with player name and starting TYLO rank (0, 1 or 2). Eg. [["Elias Ervelä", 1],["Santeri Salomaa",2]].
+    """
+    new_players_table = pd.read_csv(file_location)
+    new_players_list = []
+    for i in range(len(new_players_table)):
+        new_players_list.append(list(new_players_table.iloc[i]))
+    return new_players_list
