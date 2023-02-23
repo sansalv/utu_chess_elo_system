@@ -133,6 +133,18 @@ def find_player(players, name):
 			return p
 	return 0
 
+def print_player_games(p, games):
+	p.print_player()
+	print() # New line
+	found = False
+	print("    Date       White player             Black player      Player's score\n")
+	for g in games:
+		if (g.white_name == p.name or g.black_name == p.name):
+			found = True
+			g.print_game(p.name)
+	if found == False:
+		print("No games found")
+
 def get_players_from_table(file_location):
 	"""
 	Gets list of players name from tournament table (pandas dataframe) and returns list of strings.

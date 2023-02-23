@@ -68,18 +68,18 @@ def from_table_to_games_list(file_location, verbose=False):
             # Reads the cell and appends the game to the games_list in appropriate form.
             # ww=white win, wt=white tie, wl=white loss, bw=black win, bt=black tie, bl=black lose
             if games_table.loc[ind,col] == "ww":
-                games_list.append([str(ind), str(col), 1])
+                games_list.append([str(ind), str(col), 1.0])
             elif games_table.loc[ind,col] == "wd":
                 games_list.append([str(ind), str(col), 0.5])
             elif games_table.loc[ind,col] == "wl":
-                games_list.append([str(ind), str(col), 0])
+                games_list.append([str(ind), str(col), 0.0])
 
             elif games_table.loc[ind,col] == "bw":
-                games_list.append([str(col), str(ind), 0])
+                games_list.append([str(col), str(ind), 0.0])
             elif games_table.loc[ind,col] == "bd":
                 games_list.append([str(col), str(ind), 0.5])
             elif games_table.loc[ind,col] == "bl":
-                games_list.append([str(col), str(ind), 1])
+                games_list.append([str(col), str(ind), 1.0])
 
     if verbose:
         print("List of games:")
@@ -87,6 +87,26 @@ def from_table_to_games_list(file_location, verbose=False):
             print(i)
 
     return games_list
+
+def from_games_csv_to_games_list(file_location):
+    """
+    Parameters
+    ----------
+    file_location : String
+        File location path of the file.
+    
+    Returns
+    -------
+    List of games in format [White Player, Black Player, White result]
+    """
+    free_games = pd.read_csv(file_location)
+    free_games_list = []
+    for i in range(len(free_games)):
+        l = list(free_games.iloc[i])
+        # white result datatype from numpy.int64 to float
+        l[2] = float(l[2])
+        free_games_list.append(l)
+    return free_games_list
 
 def game_lists_to_game_instances(date, raw_games_list, players, source_file):
 	"""
@@ -109,26 +129,9 @@ def game_lists_to_game_instances(date, raw_games_list, players, source_file):
 	for g in raw_games_list:
 		w = player.find_player(players, g[0])
 		b = player.find_player(players, g[1])
-		g = Game(date, g[0], w.get_elo(), g[1], b.get_elo(), g[2], source_file)
+		g = Game(date, g[0], w.elo, g[1], b.elo, g[2], source_file)
 		games.append(g)
 	return games
-
-def from_games_csv_to_games_list(file_location):
-    """
-    Parameters
-    ----------
-    file_location : String
-        File location path of the file.
-    
-    Returns
-    -------
-    List of games in format [White Player, Black Player, White result]
-    """
-    free_games = pd.read_csv(file_location)
-    free_games_list = []
-    for i in range(len(free_games)):
-        free_games_list.append(list(free_games.iloc[i]))
-    return free_games_list
 
 # Get free games pairs
 def get_free_games_csv_pairs(new_files): # new_files is a sorted list (by datetime) of csv files
@@ -137,7 +140,7 @@ def get_free_games_csv_pairs(new_files): # new_files is a sorted list (by dateti
 	# This will leave games and new players
 	free_games = [f for f in new_files if f.split("_")[1] == "Free"]
 	# Free games csv pairs will be in the list free_games_with_new_players
-	n_free_games = len(free_games)/2
+	n_free_games = int(len(free_games)/2)
 	free_games_with_new_players = [[None, None] for i in range(n_free_games)]
 	
 	new_players_files = []
