@@ -1,83 +1,91 @@
 import player
 import game
 import save_and_load as sl
-#import pandas as pd
+import input_data
+
+import matplotlib.pyplot as plt
+import datetime as dt
 import os # For clearing terminal
-
-
 
 #_______________________________________________________________________
 # Tournament data input. Creates games and players from csv data and updated databases.
+def update_from_data():
 
-# TODO: Comment the end section of this
-def input_tournament():
+	new_tournament_files, new_free_games_files = sl.get_new_input_file_lists()
+	new_files = new_tournament_files + new_free_games_files
 	
-	# Input tournament date and file location
-	date = input("Insert date of the tournament in yyyy-mm-dd:\n")
-	file_location = input("Insert file location (path) of the tournament .csv-file:\n")
-
-	# Load old players from database
-	all_players = sl.load_players() # After this old players but later also new players will be appended
+	if len(new_files) == 0:
+		print("Everything up to date. No new data files to update.")
+		input("\nPress enter to continue.")
+		return
 	
-	#___________________________________
-	# Check and create new players:
+	# Sort files by datetime for the input order
+	new_files.sort(key = lambda f: dt.datetime.strptime(f.split("_")[0], "%Y-%m-%d"))
 
-	# Creates lists of player names from database and list of names from csv table
-	old_players_names = [p.name for p in all_players]
-	tournament_player_names = player.get_players_from_table(file_location)	
 
-	# Check if new players
-	if not all(p in old_players_names for p in tournament_player_names):
-		# New players found. Creates list of new names and prints
-		new_player_names = []
-		print("\nNew players found:")
-		for name in tournament_player_names:
-			if name not in old_players_names:
-				new_player_names.append(name)
-				print(name)
-		# Also, creates new Player instances and appends to players
-		level = int(input("\nWhat is the starting level of these players?\n(0 = 500 Elo, 1 = 1000 Elo, 2 = 1500 Elo)\n"))
-		for name in new_player_names:
-			new_player = player.newPlayer(name, level)
-			all_players.append(new_player)
-	#___________________________________
+	print("New files found:\n")
+	print(*new_files, sep='\n')
 
-	# Filter all players to tournament players
-	tournament_players = [p for p in all_players if p.name in tournament_player_names]
+	ans = input("\nDo you want to update this/these files? (y/n)\n")
+	if ans != "y":
+		return
+	
+	free_games_csv_pairs = game.get_free_games_csv_pairs(new_files)
+	free_games_idx = 0
+	
+	for f in new_files:
+		file_info = f.split("_")[1]
+		if file_info == "Beginners":
+			input_data.input_tournament(source_file=f, level=0)
+			sl.save_input_source(f)
+		elif file_info == "Intermediate":
+			input_data.input_tournament(source_file=f, level=1)
+			sl.save_input_source(f)
+		elif file_info == "Experienced":
+			input_data.input_tournament(source_file=f, level=2)
+			sl.save_input_source(f)
+		elif file_info == "Free":
+			if f.split(" - ")[1] == "Games Output.csv":
+				input_data.input_games(free_games_csv_pairs[free_games_idx])
+				sl.save_input_source(f)
+				free_games_idx += 1
+			elif f.split(" - ")[1] == "New Players Output.csv":
+				sl.save_input_source(f)
+				continue
+			else:
+				print(f"\nFree games file {f} not identified. This file will be skipped.")
+				input("\nPress enter to continue.")
+		else:
+			print(f"\nFile {f} not identified. This file will be skipped.")
+			input("\nPress enter to continue.")
 
-	# csv to list of Game instances and save games to json database
-	raw_game_list = game.from_table_to_games_list(file_location)
-	games = game.game_lists_to_game_instances(date, raw_game_list, tournament_players)
-	sl.save_new_games(games)
-	print("\nSaved games to game_database.json successfully.")
+#_____________________________________________________________________
+# Reset all databases and input all
 
-	# Calculate and update Elos and Elo histories
-	for p in tournament_players:
-		new_elo = p.calculate_new_elo_tournament(games)
-		p.update_elo_and_history(date, new_elo)
-
-	# Save all players back into json database
-	sl.save_players(all_players)
-	print("Updated players to players_database.json successfully.\n")
-	input()
-
+def reset_and_input_all():
+	sl.reset_json_database("databases/players_database.json")
+	sl.reset_json_database("databases/games_database.json")
+	sl.reset_txt_file("databases/inputed_files.txt")
+	print()
+	update_from_data()
 #_____________________________________________________________________
 # Data lookup
 # TODO: Comment and document
 
 def data_query():
-	#os.system("cls")
+
 	x = input("Input the name of the player you wish to look up or press enter to go back:\n")
 
 	if x == "":
 		return
-	players = []
 	players = sl.load_players()
 	found = False
 	for p in players:
 		if p.name == x:
 			found = True
-			print_player_games(p)
+			clear_terminal()
+			games = sl.load_games()
+			player.print_player_games(p, games)
 			break
 	if found == False:
 		input("No player with that name")
@@ -86,24 +94,6 @@ def data_query():
 	if plot == "y":
 		p.plot_elo_history()
 	return
-
-def print_player_games(p):
-	games = []
-	games = sl.load_games()
-	os.system("cls" if os.name == "nt" else "clear") # Clear terminal
-	p.print_player()
-	print() # New line
-	found = False
-	print("    Date       White player             Black player      Player's score\n")
-	for g in games:
-		if (g.white_name == p.name or g.black_name == p.name):
-			found = True
-			g.print_game(p.name)
-	if found == False:
-		print("No games found")
-
-
-
 #_____________________________________________________________________
 # Print Elo leaderboard
 # TODO: Comment and document
@@ -112,34 +102,54 @@ def print_elo_leaderboard():
 	players = sl.load_players()
 	players = sorted(players, key=lambda h: h.elo, reverse=True)
 	i = 1
-	os.system("cls" if os.name == "nt" else "clear") # Clear terminal
+	clear_terminal()
 	# TODO: print("TYLO rating leaderboard (last update: DATE):\n")
 	print("TYLO rating leaderboard:\n")
 	for p in players:
 		print(f"{i}: {p.elo}, {p.name}")
 		i += 1
-	input()
+
+	plot = input("\nDo you want a leaderboard bar plot? (y/n)\n")
+	if plot == "y":
+		names = [f"{p.name[0]}. " + p.name.split(" ")[1] for p in reversed(players)]
+		elos = [p.elo for p in reversed(players)]
+		plt.barh(names, elos)
+		plt.grid()
+		plt.show()
+
+	input("\nPress enter to continue.")
+
+def clear_terminal():
+	os.system("cls" if os.name == "nt" else "clear") # Clear terminal
 #_______________________________________________________________________
 #_______________________________________________________________________
 	
 def main():
 	#TODO: Comment and document
 
-	# 1: Input tournament data from a csv file
-	# 2: Look up player specific data
-	# 3: Print Elo leaderboard
+	# 1: Update databases
+	# 2: Reset and input all (caution)
+	# 3: Look at a profile
+	# 4: Print TYLO leaderboard
+	# Press enter to exit
 
 	while True:
 		# System clears are commented out because different commands work for Linux and Windows
-		os.system("cls" if os.name == "nt" else "clear") # Clear terminal
-		command = input("Input a command \n1: Input tournament data \n2: Look at a profile \n3: Print TYLO leaderboard \n")
-		os.system("cls" if os.name == "nt" else "clear") # Clear terminal
+		clear_terminal()
+		command = input("Input a command\n\n1: Check for new data\n2: Reset and input all (CAUTION)\n3: Look at a profile\n4: Print TYLO leaderboard\n\nENTER: Exit\n\n")
+		clear_terminal()
 		match command:
 			case "1":
-				input_tournament()
+				clear_terminal()
+				update_from_data()
 			case "2":
-				data_query()
+				ans = input("WARNING:\nAre you sure you want to reset (and input) all? (y/n)\n")
+				if ans == "y":
+					clear_terminal()
+					reset_and_input_all()
 			case "3":
+				data_query()
+			case "4":
 				print_elo_leaderboard()
 			case "":
 				exit()
