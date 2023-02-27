@@ -7,8 +7,12 @@ import matplotlib.pyplot as plt
 import datetime as dt
 import os # For clearing terminal
 
+# Methods of the main() while-loop
+
 #_______________________________________________________________________
-# Tournament data input. Creates games and players from csv data and updated databases.
+# Checks if there is some new data to input. Directs into input_tournament() or input_games()
+# TODO: Comment and document
+
 def update_from_data():
 
 	new_tournament_files, new_free_games_files = sl.get_new_input_file_lists()
@@ -60,7 +64,7 @@ def update_from_data():
 			input("\nPress enter to continue.")
 
 #_____________________________________________________________________
-# Reset all databases and input all
+# Reset all databases and input all, i.e. reset + update_from_data()
 
 def reset_and_input_all():
 	sl.reset_json_database("databases/players_database.json")
