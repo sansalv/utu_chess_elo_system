@@ -5,6 +5,7 @@ import glob
 import os
 
 # Methods for resetting, saving and loading the json data
+# TODO: Comment and document rest of this libraby
 
 def reset_json_database(database_file):
 	empty_dir_list = []

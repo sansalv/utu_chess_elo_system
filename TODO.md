@@ -6,4 +6,4 @@
 - Do edit player info (that changes also the games) to main()
 - Check if it's to better to save Player instances to json instead of their names in the games database
 - Do backups for the databases
-- website frontend (@Lama business)
+- Website frontend (@Lama business)

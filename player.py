@@ -5,7 +5,6 @@ import matplotlib.dates as mdates
 import numpy as np
 
 # TODO: Comment and document rest of this libraby
-
 # After Player class there are methods involving Player instances
 
 class Player:
