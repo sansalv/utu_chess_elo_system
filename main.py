@@ -122,14 +122,8 @@ def update_from_data():
 	
 	for f in new_files:
 		file_info = f.split("_")[1]
-		if file_info == "Beginners":
-			input_data.input_tournament(source_file=f, level=0)
-			sl.save_input_source(f)
-		elif file_info == "Intermediate":
-			input_data.input_tournament(source_file=f, level=1)
-			sl.save_input_source(f)
-		elif file_info == "Experienced":
-			input_data.input_tournament(source_file=f, level=2)
+		if file_info in ["Beginners", "Beginners/Intermediate", "Intermediate", "Intermediate/Experienced", "Experienced", "Beginners/Intermediate/Experienced"]:
+			input_data.input_tournament(source_file=f)
 			sl.save_input_source(f)
 		elif file_info == "Free":
 			if f.split(" - ")[1] == "Games Output.csv":

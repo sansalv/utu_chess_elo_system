@@ -12,7 +12,7 @@ input_games()
 # Tournament data input. Creates games and players from csv data and updated databases.
 
 # TODO: Comment rest of this properly
-def input_tournament(source_file, level):
+def input_tournament(source_file):
 	#___________________________________
 	# Info of the tournament
 
