@@ -700,5 +700,464 @@
         "black_elo": 1628,
         "white_score": 1.0,
         "source_file": "2023-02-22_Free_Rated_Games - Games Output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Federico Settimo",
+        "black_name": "Arman Anzanpour",
+        "white_elo": 500,
+        "black_elo": 808,
+        "white_score": 1.0,
+        "source_file": "2023-03-01_Beginners_Group - .csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Arman Anzanpour",
+        "black_name": "Markku Hahto",
+        "white_elo": 808,
+        "black_elo": 500,
+        "white_score": 0.0,
+        "source_file": "2023-03-01_Beginners_Group - .csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Jutta Korhonen",
+        "black_name": "Arman Anzanpour",
+        "white_elo": 500,
+        "black_elo": 808,
+        "white_score": 0.0,
+        "source_file": "2023-03-01_Beginners_Group - .csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Arman Anzanpour",
+        "black_name": "Joni Lampinen",
+        "white_elo": 808,
+        "black_elo": 500,
+        "white_score": 1.0,
+        "source_file": "2023-03-01_Beginners_Group - .csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Federico Settimo",
+        "black_name": "Markku Hahto",
+        "white_elo": 500,
+        "black_elo": 500,
+        "white_score": 1.0,
+        "source_file": "2023-03-01_Beginners_Group - .csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Federico Settimo",
+        "black_name": "Jutta Korhonen",
+        "white_elo": 500,
+        "black_elo": 500,
+        "white_score": 0.5,
+        "source_file": "2023-03-01_Beginners_Group - .csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Olli Juntunen",
+        "black_name": "Federico Settimo",
+        "white_elo": 500,
+        "black_elo": 500,
+        "white_score": 1.0,
+        "source_file": "2023-03-01_Beginners_Group - .csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Joni Lampinen",
+        "black_name": "Federico Settimo",
+        "white_elo": 500,
+        "black_elo": 500,
+        "white_score": 0.0,
+        "source_file": "2023-03-01_Beginners_Group - .csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Jutta Korhonen",
+        "black_name": "Markku Hahto",
+        "white_elo": 500,
+        "black_elo": 500,
+        "white_score": 0.0,
+        "source_file": "2023-03-01_Beginners_Group - .csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Olli Juntunen",
+        "black_name": "Jutta Korhonen",
+        "white_elo": 500,
+        "black_elo": 500,
+        "white_score": 1.0,
+        "source_file": "2023-03-01_Beginners_Group - .csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Joni Lampinen",
+        "black_name": "Olli Juntunen",
+        "white_elo": 500,
+        "black_elo": 500,
+        "white_score": 0.0,
+        "source_file": "2023-03-01_Beginners_Group - .csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Moein Khalighi",
+        "black_name": "Ville Koponen",
+        "white_elo": 1500,
+        "black_elo": 1436,
+        "white_score": 1.0,
+        "source_file": "2023-03-01_Experienced_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Moein Khalighi",
+        "black_name": "Santeri Salomaa",
+        "white_elo": 1500,
+        "black_elo": 1573,
+        "white_score": 0.0,
+        "source_file": "2023-03-01_Experienced_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Ossi Airaksinen",
+        "black_name": "Moein Khalighi",
+        "white_elo": 1128,
+        "black_elo": 1500,
+        "white_score": 0.0,
+        "source_file": "2023-03-01_Experienced_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Aleksi Kamppinen",
+        "black_name": "Moein Khalighi",
+        "white_elo": 1472,
+        "black_elo": 1500,
+        "white_score": 0.5,
+        "source_file": "2023-03-01_Experienced_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Moein Khalighi",
+        "black_name": "Tatu Hanski",
+        "white_elo": 1500,
+        "black_elo": 1500,
+        "white_score": 1.0,
+        "source_file": "2023-03-01_Experienced_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Ville Koponen",
+        "black_name": "Santeri Salomaa",
+        "white_elo": 1436,
+        "black_elo": 1573,
+        "white_score": 0.0,
+        "source_file": "2023-03-01_Experienced_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Ossi Airaksinen",
+        "black_name": "Ville Koponen",
+        "white_elo": 1128,
+        "black_elo": 1436,
+        "white_score": 1.0,
+        "source_file": "2023-03-01_Experienced_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Ville Koponen",
+        "black_name": "Aleksi Kamppinen",
+        "white_elo": 1436,
+        "black_elo": 1472,
+        "white_score": 0.0,
+        "source_file": "2023-03-01_Experienced_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Tatu Hanski",
+        "black_name": "Ville Koponen",
+        "white_elo": 1500,
+        "black_elo": 1436,
+        "white_score": 1.0,
+        "source_file": "2023-03-01_Experienced_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Santeri Salomaa",
+        "black_name": "Ossi Airaksinen",
+        "white_elo": 1573,
+        "black_elo": 1128,
+        "white_score": 1.0,
+        "source_file": "2023-03-01_Experienced_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Santeri Salomaa",
+        "black_name": "Aleksi Kamppinen",
+        "white_elo": 1573,
+        "black_elo": 1472,
+        "white_score": 0.0,
+        "source_file": "2023-03-01_Experienced_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Santeri Salomaa",
+        "black_name": "Tatu Hanski",
+        "white_elo": 1573,
+        "black_elo": 1500,
+        "white_score": 1.0,
+        "source_file": "2023-03-01_Experienced_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Aleksi Kamppinen",
+        "black_name": "Ossi Airaksinen",
+        "white_elo": 1472,
+        "black_elo": 1128,
+        "white_score": 1.0,
+        "source_file": "2023-03-01_Experienced_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Tatu Hanski",
+        "black_name": "Ossi Airaksinen",
+        "white_elo": 1500,
+        "black_elo": 1128,
+        "white_score": 0.0,
+        "source_file": "2023-03-01_Experienced_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Tatu Hanski",
+        "black_name": "Aleksi Kamppinen",
+        "white_elo": 1500,
+        "black_elo": 1472,
+        "white_score": 0.0,
+        "source_file": "2023-03-01_Experienced_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Eetu Rantala",
+        "black_name": "Jarkko Typp\u00f6",
+        "white_elo": 1372,
+        "black_elo": 1000,
+        "white_score": 1.0,
+        "source_file": "2023-03-01_Intermediate_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Valter Olin",
+        "black_name": "Eetu Rantala",
+        "white_elo": 1000,
+        "black_elo": 1372,
+        "white_score": 0.0,
+        "source_file": "2023-03-01_Intermediate_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Miro Cedercreutz",
+        "black_name": "Eetu Rantala",
+        "white_elo": 1000,
+        "black_elo": 1372,
+        "white_score": 0.0,
+        "source_file": "2023-03-01_Intermediate_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Jere Aaros",
+        "black_name": "Eetu Rantala",
+        "white_elo": 1064,
+        "black_elo": 1372,
+        "white_score": 0.5,
+        "source_file": "2023-03-01_Intermediate_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Eetu Rantala",
+        "black_name": "Otso Helminen",
+        "white_elo": 1372,
+        "black_elo": 1064,
+        "white_score": 0.0,
+        "source_file": "2023-03-01_Intermediate_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Eetu Rantala",
+        "black_name": "Valtteri Alatalo",
+        "white_elo": 1372,
+        "black_elo": 1115,
+        "white_score": 1.0,
+        "source_file": "2023-03-01_Intermediate_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Christian Palmroos",
+        "black_name": "Eetu Rantala",
+        "white_elo": 1000,
+        "black_elo": 1372,
+        "white_score": 0.0,
+        "source_file": "2023-03-01_Intermediate_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Valter Olin",
+        "black_name": "Jarkko Typp\u00f6",
+        "white_elo": 1000,
+        "black_elo": 1000,
+        "white_score": 1.0,
+        "source_file": "2023-03-01_Intermediate_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Jarkko Typp\u00f6",
+        "black_name": "Jere Aaros",
+        "white_elo": 1000,
+        "black_elo": 1064,
+        "white_score": 0.0,
+        "source_file": "2023-03-01_Intermediate_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Jarkko Typp\u00f6",
+        "black_name": "Otso Helminen",
+        "white_elo": 1000,
+        "black_elo": 1064,
+        "white_score": 0.0,
+        "source_file": "2023-03-01_Intermediate_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Valtteri Alatalo",
+        "black_name": "Jarkko Typp\u00f6",
+        "white_elo": 1115,
+        "black_elo": 1000,
+        "white_score": 1.0,
+        "source_file": "2023-03-01_Intermediate_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Jarkko Typp\u00f6",
+        "black_name": "Christian Palmroos",
+        "white_elo": 1000,
+        "black_elo": 1000,
+        "white_score": 1.0,
+        "source_file": "2023-03-01_Intermediate_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Miro Cedercreutz",
+        "black_name": "Valter Olin",
+        "white_elo": 1000,
+        "black_elo": 1000,
+        "white_score": 1.0,
+        "source_file": "2023-03-01_Intermediate_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Valter Olin",
+        "black_name": "Jere Aaros",
+        "white_elo": 1000,
+        "black_elo": 1064,
+        "white_score": 0.0,
+        "source_file": "2023-03-01_Intermediate_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Otso Helminen",
+        "black_name": "Valter Olin",
+        "white_elo": 1064,
+        "black_elo": 1000,
+        "white_score": 1.0,
+        "source_file": "2023-03-01_Intermediate_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Valter Olin",
+        "black_name": "Valtteri Alatalo",
+        "white_elo": 1000,
+        "black_elo": 1115,
+        "white_score": 0.0,
+        "source_file": "2023-03-01_Intermediate_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Christian Palmroos",
+        "black_name": "Valter Olin",
+        "white_elo": 1000,
+        "black_elo": 1000,
+        "white_score": 1.0,
+        "source_file": "2023-03-01_Intermediate_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Jere Aaros",
+        "black_name": "Miro Cedercreutz",
+        "white_elo": 1064,
+        "black_elo": 1000,
+        "white_score": 0.0,
+        "source_file": "2023-03-01_Intermediate_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Christian Palmroos",
+        "black_name": "Miro Cedercreutz",
+        "white_elo": 1000,
+        "black_elo": 1000,
+        "white_score": 1.0,
+        "source_file": "2023-03-01_Intermediate_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Jere Aaros",
+        "black_name": "Otso Helminen",
+        "white_elo": 1064,
+        "black_elo": 1064,
+        "white_score": 1.0,
+        "source_file": "2023-03-01_Intermediate_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Valtteri Alatalo",
+        "black_name": "Jere Aaros",
+        "white_elo": 1115,
+        "black_elo": 1064,
+        "white_score": 0.0,
+        "source_file": "2023-03-01_Intermediate_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Jere Aaros",
+        "black_name": "Christian Palmroos",
+        "white_elo": 1064,
+        "black_elo": 1000,
+        "white_score": 1.0,
+        "source_file": "2023-03-01_Intermediate_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Otso Helminen",
+        "black_name": "Valtteri Alatalo",
+        "white_elo": 1064,
+        "black_elo": 1115,
+        "white_score": 1.0,
+        "source_file": "2023-03-01_Intermediate_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Otso Helminen",
+        "black_name": "Christian Palmroos",
+        "white_elo": 1064,
+        "black_elo": 1000,
+        "white_score": 0.0,
+        "source_file": "2023-03-01_Intermediate_Group - csv output.csv"
+    },
+    {
+        "date": "2023-03-01",
+        "white_name": "Valtteri Alatalo",
+        "black_name": "Christian Palmroos",
+        "white_elo": 1115,
+        "black_elo": 1000,
+        "white_score": 1.0,
+        "source_file": "2023-03-01_Intermediate_Group - csv output.csv"
     }
 ]

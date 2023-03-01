@@ -120,7 +120,7 @@ def newPlayer(name, level):
         starting_elo = 500
     elif level == 1: 	# starting at intermediate league
         starting_elo = 1000
-    elif level == 2: 				# starting at experienced league
+    elif level == 2: 	# starting at experienced league
         starting_elo = 1500
     new_player = Player(name, starting_elo, [], 0) # elo_history = [] and games_played = 0
     return new_player

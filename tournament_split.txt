@@ -1,0 +1,20 @@
+Suggested tournament split. You can move players.
+----------------------------
+('Federico Settimo', 500)
+('Markku Hahto', 500)
+('Arman Anzanpour', 808)
+('Christian Palmroos', 1000)
+----------------------------
+('Jarkko Typpö', 1000)
+('Valter Olin', 1000)
+('Miro Cedercreutz', 1000)
+('Otso Helminen', 1064)
+('Jere Aaros', 1064)
+('Valtteri Alatalo', 1115)
+('Eetu Rantala', 1372)
+----------------------------
+('Ossi Airaksinen', 1128)
+('Ville Koponen', 1436)
+('Aleksi Kamppinen', 1472)
+('Moein Khalighi', 1500)
+('Santeri Salomaa', 1573)
