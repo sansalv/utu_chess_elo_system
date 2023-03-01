@@ -181,11 +181,15 @@ def data_query():
 
 def print_elo_leaderboard():
 	players = sl.load_players()
+
 	players = sorted(players, key=lambda h: h.elo, reverse=True)
 	i = 1
 	clear_terminal()
 	# TODO: print("TYLO rating leaderboard (last update: DATE):\n")
-	print("TYLO rating leaderboard:\n")
+	with open("databases/inputed_files.txt", "r") as txt:
+			files = txt.read().splitlines()
+	date = files[-1].split("_")[0]
+	print(f"TYLO rating leaderboard\n(last update: {date}):\n")
 	for p in players:
 		print(f"{i}: {p.elo}, {p.name}")
 		i += 1

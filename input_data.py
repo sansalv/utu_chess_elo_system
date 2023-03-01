@@ -24,8 +24,34 @@ def input_tournament(source_file):
 	all_players = sl.load_players() # After this old players but later also new players will be appended
 	# Filter to tournament players
 	tournament_player_names = player.get_players_from_table(file_location)
-	tournament_players = [p for p in all_players if p.name in tournament_player_names]
+	
 
+	#___________________________________
+	# Create new players that were late and therefore weren't created at start_tournament() method
+	is_new_players = False
+	old_names = [p.name for p in all_players]
+	new_players = []
+	for name in tournament_player_names:
+		if name not in old_names:
+			is_new_players = True
+			level = int(input(f"What is the level of {name}?\n(0=500=Beginner, 1=1000=Intermediate, 2=1500=Experienced, abort=abort)\n"))
+			while level not in [0,1,2,"abort"]:
+				level = int(input("Try again.\n(0=500=Beginner, 1=1000=Intermediate, 2=1500=Experienced, abort=abort)\n"))
+			if level == "abort": return
+			new_player = player.newPlayer(name, level)
+			new_players.append(new_player)
+			all_players.append(new_player)
+
+	if is_new_players:
+		print(f"All new players:\n")
+		print(*[(p.name, p.elo) for p in new_players], sep="\n")
+		ans = input("\nAre these correct? (y/abort)\n")
+		while ans not in ["y","abort"]:
+			ans = input("\nTry again. (y/abort)")
+		if ans == "abort": return
+	#___________________________________
+	# Filter all players to tournament players
+	tournament_players = [p for p in all_players if p.name in tournament_player_names]
 	#___________________________________
 	# csv to list of Game instances and save games to json database
 	raw_game_list = game.from_table_to_games_list(file_location)
