@@ -7,3 +7,4 @@
 - Check if it's to better to save Player instances to json instead of their names in the games database
 - Do backups for the databases
 - Website frontend (@Lama business)
+- All player lists to Player lists (dibs, t. Elias Erv)
