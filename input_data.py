@@ -4,14 +4,14 @@ import game
 """
 Library for data input methods:
 
-input_tournament() 
+input_tournament()
 input_games()
 """
 
 #_______________________________________________________________________
 # Tournament data input. Creates games and players from csv data and updated databases.
 
-# TODO: Comment the end section of this
+# TODO: Comment rest of this properly
 def input_tournament(source_file, level):
 	#___________________________________
 	# Info of the tournament
@@ -22,37 +22,18 @@ def input_tournament(source_file, level):
 	#___________________________________
 	# Load old players from database
 	all_players = sl.load_players() # After this old players but later also new players will be appended
-
-	#___________________________________
-	# Check and create new players:
-
-	# Creates lists of player names from database and list of names from csv table
-	old_players_names = [p.name for p in all_players]
-	tournament_player_names = player.get_players_from_table(file_location)	
-
-	# Check if new players
-	if not all(p in old_players_names for p in tournament_player_names):
-		# New players found. Creates list of new names and prints
-		new_player_names = []
-		print(f"\nNew level {level} players found:")
-		for name in tournament_player_names:
-			if name not in old_players_names:
-				new_player_names.append(name)
-				print(name)
-		for name in new_player_names:
-			new_player = player.newPlayer(name, level)
-			all_players.append(new_player)
-	#___________________________________
-
-	# Filter all players to tournament players
+	# Filter to tournament players
+	tournament_player_names = player.get_players_from_table(file_location)
 	tournament_players = [p for p in all_players if p.name in tournament_player_names]
 
+	#___________________________________
 	# csv to list of Game instances and save games to json database
 	raw_game_list = game.from_table_to_games_list(file_location)
 	games = game.game_lists_to_game_instances(date, raw_game_list, tournament_players, source_file)
 	sl.save_new_games(games)
 	print("\nSaved games to game_database.json successfully.")
 
+	#___________________________________
 	# Calculate and update Elos and Elo histories
 	for p in tournament_players:
 		new_elo = p.calculate_new_elo_tournament(games)

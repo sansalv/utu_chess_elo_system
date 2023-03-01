@@ -120,7 +120,7 @@ def newPlayer(name, level):
         starting_elo = 500
     elif level == 1: 	# starting at intermediate league
         starting_elo = 1000
-    else: 				# starting at experienced league
+    elif level == 2: 				# starting at experienced league
         starting_elo = 1500
     new_player = Player(name, starting_elo, [], 0) # elo_history = [] and games_played = 0
     return new_player
@@ -192,3 +192,76 @@ def get_new_players_with_level_from_games_csv(file_location):
     for i in range(len(new_players_table)):
         new_players_list.append(list(new_players_table.iloc[i]))
     return new_players_list
+
+def get_tournament_group_lists(tournament_players):
+    hard_coded_group_splits = {
+        # Heuristics for the hard coding
+        # - Prioritise even numbers. 
+        # - Beginners have always even numbers.
+        # - len(intermediate) > len(experienced) > len(beginners)
+        1: [1],
+        2: [2],
+        3: [3],
+        4: [4],
+        5: [5],
+        6: [6],
+        7: [4,3],
+        8: [4,4],
+        9: [4,5],
+        10: [4,6],
+        11: [6,5],
+        12: [4,4,4],
+        13: [4,5,4],
+        14: [4,6,4],
+        15: [4,6,5],
+        16: [4,6,6],
+        17: [6,6,5],
+        18: [6,6,6],
+        19: [6,7,6],
+        20: [6,8,6],
+        21: [6,8,7],
+        22: [6,8,8],
+        23: [6,9,8],
+        24: [8,8,8],
+        25: [8,9,8],
+        26: [8,10,8],
+        27: [8,10,9],
+        28: [8,10,10],
+        29: [8,11,10],
+        30: [8,12,10],
+        31: [8,12,11],
+        32: [8,12,12],
+        33: [10,12,11],
+        34: [10,12,12],
+        35: [10,13,12],
+        36: [10,14,12]
+    }
+    # TODO Do some better implementation than hard coding.  :DDD
+
+    # Sort players by elo, lowest first
+    sorted_Players_list = sorted(tournament_players, key = lambda p: p.elo)
+
+    # If more than the amount thats hard coded, then split evenly.
+    if len(sorted_Players_list) > 36:
+        groups = np.array_split(np.array(sorted_Players_list), 3)
+        return [list(groups[0]),list(groups[1]),list(groups[2])]
+    
+    # Else, use the hard coded splits
+    else:
+        group_split = hard_coded_group_splits[len(sorted_Players_list)]
+
+        if len(group_split) == 3:
+            beginners_group = sorted_Players_list[:group_split[0]]
+            intermediate_group = sorted_Players_list[group_split[0]:group_split[0]+group_split[1]]
+            experienced_group = sorted_Players_list[group_split[0]+group_split[1]:]
+            groups = [beginners_group,intermediate_group,experienced_group]
+
+        elif len(group_split) == 2:
+            beginners_group = sorted_Players_list[:group_split[0]]
+            experienced_group = sorted_Players_list[group_split[0]:]
+            groups = [beginners_group,experienced_group]
+
+        elif len(group_split) == 1:
+            groups = [sorted_Players_list]
+            
+        return groups

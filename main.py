@@ -3,11 +3,94 @@ import game
 import save_and_load as sl
 import input_data
 
+import random as rd
 import matplotlib.pyplot as plt
 import datetime as dt
 import os # For clearing terminal
 
 # Methods of the main() while-loop
+
+def start_tournament():
+	
+	# Read tournament names from txt file
+	with open("tournament_names.txt", "r") as f:
+		tournament_names = f.read().split("\n")[2:]
+	
+	# Load old players
+	all_players = sl.load_players()
+
+	#___________________________________
+	# Find new players and append them to all_players list
+	is_new_players = False
+	old_names = [p.name for p in all_players]
+	for name in tournament_names:
+		# If new player found
+		if name not in old_names:
+			
+			is_new_players = True
+
+			ans = input(f"Is {name} a new player? Abort and correct name if there is a spelling error. (y/abort)\n")
+			while ans not in ["y", "abort"]:
+				ans = input("Try answering again (y/abort)\n")
+			if ans == "abort":
+				print("Databases didn't update. Try again.")
+				input("\nPress enter to continue.\n")
+				return
+			
+			# Create new player and append it to all_players
+			level = int(input(f"What is the starting level of this player? (0=500, 1=1000, 2=1500)\n"))
+			new_player = player.newPlayer(name, level)
+			all_players.append(new_player)
+
+	if is_new_players:
+		# Save all players back into json database
+		sl.save_players(all_players)
+		print("\nUpdated players to players_database.json successfully.\n")
+	#___________________________________
+
+	#clear_terminal()
+	tournament_players = [p for p in all_players if p.name in tournament_names]
+	
+	sorted_lists = player.get_tournament_group_lists(tournament_players)
+
+	# Suggest and correct tournament split
+	with open("tournament_split.txt", "w") as f:
+		print("Suggested tournament split. You can move players.", file=f)
+		for group in sorted_lists:
+			print("----------------------------", file=f)
+			name_elo_list = [(p.name, p.elo) for p in group]
+			print(*name_elo_list, sep="\n", file=f)
+	print()
+	ans = input("Suggested tournament split is now in tournament_split.txt. You can move players.\nAfter this, type continue/abort.\n")
+	while ans not in ["continue", "abort"]:
+		ans = input("Try answering again (continue/abort)\n")
+	if ans == "abort":
+		return
+	
+	with open("tournament_split.txt", "r") as f:
+		tournament_names_elos = f.read().split("\n")[2:]
+	
+	# Create beginners, intermediate and experienced groups
+	groups = [[],[],[]]
+	group_index = 0
+	for name_elo in tournament_names_elos:
+		if name_elo not in ["", "----------------------------"]:
+			groups[group_index].append(name_elo)
+		else:
+			group_index += 1
+		
+	print("\n\nGroups in seating orders (random order):\n")
+	print("----------------------------")
+	# Number of non-zero groups
+	n_groups = sum([1 if len(group)!=0 else 0 for group in groups])
+	for i in range(n_groups):
+		rd.shuffle(groups[i])
+		print(f"Group {i}:")
+		for name_elo in groups[i]:
+			ne = eval(name_elo)
+			print(ne[0])
+		print("----------------------------")
+	input("\nPress enter to continue.")
 
 #_______________________________________________________________________
 # Checks if there is some new data to input. Directs into input_tournament() or input_games()
@@ -140,20 +223,21 @@ def main():
 	while True:
 		# System clears are commented out because different commands work for Linux and Windows
 		clear_terminal()
-		command = input("Input a command\n\n1: Check for new data\n2: Reset and input all (CAUTION)\n3: Look at a profile\n4: Print TYLO leaderboard\n\nENTER: Exit\n\n")
+		command = input("Input a command\n\n1: Start new tournament day (do the name list first)\n2: Check for new data\n3: Reset and input all (CAUTION)\n4: Look at a profile\n5: Print TYLO leaderboard\n\nENTER: Exit\n\n")
 		clear_terminal()
 		match command:
 			case "1":
-				clear_terminal()
-				update_from_data()
+				start_tournament()
 			case "2":
+				update_from_data()
+			case "3":
 				ans = input("WARNING:\nAre you sure you want to reset (and input) all? (y/n)\n")
 				if ans == "y":
 					clear_terminal()
 					reset_and_input_all()
-			case "3":
-				data_query()
 			case "4":
+				data_query()
+			case "5":
 				print_elo_leaderboard()
 			case "":
 				exit()
