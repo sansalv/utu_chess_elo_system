@@ -6,3 +6,8 @@
 2023-03-01_Beginners_Group - .csv output.csv
 2023-03-01_Experienced_Group - csv output.csv
 2023-03-01_Intermediate_Group - csv output.csv
+2023-03-08_Free_Rated_Games - New Players Output.csv
+2023-03-08_Free_Rated_Games - Games Output.csv
+2023-03-15_Intermediate_Group - csv output.csv
+2023-03-15_Experienced_Group - csv output.csv
+2023-03-15_Beginners_Group - csv output.csv

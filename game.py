@@ -7,7 +7,6 @@ import pandas as pd
 # After Game class there are methods involving Game instances
 
 class Game:
-
     def __init__(self, date, white_name, white_elo, black_name, black_elo, white_score, source_file):
         self.date = date
         self.white_name = white_name
@@ -16,10 +15,12 @@ class Game:
         self.black_elo = black_elo
         self.white_score = white_score
         self.source_file = source_file
+    
+    def __str__(self):
+        return f"[{self.date}] {self.white_name} ({self.white_elo}) {self.black_name} ({self.black_elo})"
         
     def print_game(self, name):
-        # Date / White name (rating) / Black name (rating) / Player's score
-        print(f"[{self.date}] {self.white_name} ({self.white_elo}) {self.black_name} ({self.black_elo})", end=' ')
+        print(self, end=' ')
         if (name == self.white_name and self.white_score == 1) or (name == self.black_name and self.white_score == 0):
             print(colored("Victory", "yellow"))
         elif (self.white_score == 0.5):

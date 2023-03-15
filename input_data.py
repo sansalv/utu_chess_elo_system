@@ -38,7 +38,7 @@ def input_tournament(source_file):
 			while level not in [0,1,2,"abort"]:
 				level = int(input("Try again.\n(0=500=Beginner, 1=1000=Intermediate, 2=1500=Experienced, abort=abort)\n"))
 			if level == "abort": return
-			new_player = player.newPlayer(name, level)
+			new_player = player.newPlayer(name, level, date)
 			new_players.append(new_player)
 			all_players.append(new_player)
 
@@ -90,7 +90,6 @@ def input_games(free_games_csv_pair):
 	#___________________________________
 	# Create new players:
 
-	# TODO: Eliaksen koodista nämä
 	new_player_names_with_level = player.get_new_players_with_level_from_games_csv(new_players_file_location)
 
 	print("\nNew players:")
@@ -98,7 +97,7 @@ def input_games(free_games_csv_pair):
 		name = name_level[0]
 		level = name_level[1]
 		print(f"{name}, starting level: {level}")
-		all_players.append(player.newPlayer(name, level))
+		all_players.append(player.newPlayer(name, level, date))
 	#___________________________________
 
 	# Filter all players to present players

@@ -1,18 +1,22 @@
 Write your name in format Firstname Lastname (check spelling):
 --------------------------------------------------------------
 Santeri Salomaa
-Moein Khalighi
-Miro Cedercreutz
-Jarkko Typpö
-Eetu Rantala
-Aleksi Kamppinen
-Ossi Airaksinen
+Pyry Herva
+Jaakko Tanttari
+Aleksi Varho
+Otto Hanski
+Kaisa Hakkarainen
 Federico Settimo
-Otso Helminen
-Valter Olin
 Markku Hahto
-Valtteri Alatalo
+Akseli Korkeamäki
+Aaro Kangasmaa
+Vilppu Saarinen
+Otso Helminen
 Jere Aaros
-Ville Koponen
-Christian Palmroos
-Arman Anzanpour
+Joel Ruusuvuori
+Valtteri Alatalo
+Kerttu-Inkeri Pusa
+Jutta Korhonen
+Nikola Tsarigradski
+Olli Juntunen
+Daniel Pavlov
