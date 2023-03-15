@@ -6,6 +6,7 @@ import input_data
 import random as rd
 import matplotlib.pyplot as plt
 import datetime as dt
+import matplotlib.dates as mdates
 import os # For clearing terminal
 
 # Methods of the main() while-loop
@@ -180,18 +181,35 @@ def data_query():
 # TODO: Comment and document
 
 def print_elo_leaderboard():
-	players = sl.load_players()
 
+	players = sl.load_players()
 	players = sorted(players, key=lambda h: h.elo, reverse=True)
+
 	i = 1
-	clear_terminal()
 	# TODO: print("TYLO rating leaderboard (last update: DATE):\n")
 	with open("databases/inputed_files.txt", "r") as txt:
 			files = txt.read().splitlines()
 	date = files[-1].split("_")[0]
-	print(f"TYLO rating leaderboard\n(last update: {date}):\n")
+
+
+	ans = input("Do you want to filter players only by latest update? (y/n)\n")
+
+	clear_terminal()
+
+	if ans == "y":
+		players = [p for p in players if p.elo_history[-1][0] == date]
+		print(f"TYLO rating leaderboard\n(players filtered by last update {date}):\n")
+	else:
+		print(f"Overall TYLO rating leaderboard\n(last update: {date}):\n")
+	
 	for p in players:
-		print(f"{i}: {p.elo}, {p.name}")
+		elo_update = str(p.elo_history[-1][1]-p.elo_history[-2][1])
+		if elo_update[:1] != '-':
+			elo_update = '+' + elo_update
+		if p.elo_history[-1][0] == date:
+			print(f"{i}: {p.elo} ({elo_update}) {p.name}")
+		else:
+			print(f"{i}: {p.elo}       {p.name}")
 		i += 1
 
 	plot = input("\nDo you want a leaderboard bar plot? (y/n)\n")
@@ -201,7 +219,43 @@ def print_elo_leaderboard():
 		plt.barh(names, elos)
 		plt.grid()
 		plt.show()
+	
+	plot2 = input("\nDo you want a TYLO rating history plot? (y/n)\n")
+	if plot2 == "y":
+		for p in players:
+			name = f"{p.name[0]}. " + p.name.split(" ")[1]
+			dates = [eh[0] for eh in p.elo_history]
+			x = [dt.datetime.strptime(d,"%Y-%m-%d").date() for d in dates]
+			plt.gca().xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d"))
+			y = [eh[1] for eh in p.elo_history]
+			plt.gca().xaxis.set_major_locator(mdates.DayLocator())
+			plt.plot(x,y, '-o', label=name)
 
+		plt.legend(bbox_to_anchor=(1.04, 0.5), loc="center left", borderaxespad=0)
+
+		plt.gcf().autofmt_xdate()
+		plt.xlabel("Date")
+		plt.ylabel("TYLO rating")
+		plt.grid()
+		#plt.legend()
+		plt.show()
+
+	input("\nPress enter to continue.")
+
+def sort_players():
+	players = sl.load_players()
+
+	ans = input("How do you want to sort players? (n = number of games)\n")
+	clear_terminal()
+	if ans == "n":
+		players = sorted(players, key=lambda h: h.games_played, reverse=True)
+		print("Players sorted by their number of games played:")
+		print("games played, name (TYLO rating)\n")
+	i = 1
+	for p in players:
+		print(f"{i}: {p.games_played}, {p.name} ({p.elo})")
+		i += 1
+	
 	input("\nPress enter to continue.")
 
 def clear_terminal():
@@ -221,7 +275,7 @@ def main():
 	while True:
 		# System clears are commented out because different commands work for Linux and Windows
 		clear_terminal()
-		command = input("Input a command\n\n1: Start new tournament day (do the name list first)\n2: Check for new data\n3: Reset and input all (CAUTION)\n4: Look at a profile\n5: Print TYLO leaderboard\n\nENTER: Exit\n\n")
+		command = input("Input a command\n\n1: Start new tournament day (do the name list first)\n2: Check for new data\n3: Reset and input all (CAUTION)\n4: Look at a profile\n5: Print TYLO leaderboard\n6: Print sorted players\n\nENTER: Exit\n\n")
 		clear_terminal()
 		match command:
 			case "1":
@@ -236,7 +290,10 @@ def main():
 			case "4":
 				data_query()
 			case "5":
+				clear_terminal()
 				print_elo_leaderboard()
+			case "6":
+				sort_players()
 			case "":
 				exit()
 			case _:

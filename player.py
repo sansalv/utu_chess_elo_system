@@ -14,6 +14,14 @@ class Player:
         self.elo_history = elo_history
         self.games_played = games_played
 
+    def __str__(self):
+        return f"{self.name} - TYLO rating: {self.elo} - Games played: {self.games_played}"
+    
+    """
+    def __repr__(self):
+        return f"Player(id={self.id}, name='{self.name}', rating={self.rating})"
+    """
+
     # Setter for elo and elo_history
     def update_elo_and_history(self, date, new_elo):
         self.elo = new_elo
@@ -105,24 +113,20 @@ class Player:
         
         return new_elo
 
-    def print_player(self):
-        # Name (Elo)
-        print(f"Player: {self.name} ({self.elo})")
-
 #_______________________________________________________________________
 
 # Methods outside of class:
 
 # Create new player instance. Starting Elo rating depends on the level
 # level 0 = beginner league, level 1 = intermediate league, level 2 = experienced league
-def newPlayer(name, level):
+def newPlayer(name, level, date):
     if level == 0: 		# starting at beginner league
         starting_elo = 500
     elif level == 1: 	# starting at intermediate league
         starting_elo = 1000
     elif level == 2: 	# starting at experienced league
         starting_elo = 1500
-    new_player = Player(name, starting_elo, [], 0) # elo_history = [] and games_played = 0
+    new_player = Player(name, starting_elo, [(date, starting_elo)], 0) #  games_played = 0
     return new_player
 
 # Return Player (instance) from name (string)
@@ -133,7 +137,7 @@ def find_player(players, name):
 	return 0
 
 def print_player_games(p, games):
-	p.print_player()
+	print(p)
 	print() # New line
 	found = False
 	print("    Date       White player             Black player      Player's score\n")
