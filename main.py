@@ -19,6 +19,8 @@ Methods of the main() while-loop:
 6: Print sorted players
 """
 
+# _______________________________________________________________________
+
 # 1: Start new tournament day (do the name list first)
 def start_tournament():
     """
@@ -226,6 +228,10 @@ def reset_and_input_all():
     """
     Reset all databases and input all.
     This consists of reset and update_from_data()
+
+    Returns:
+    --------
+    None
     """
 
     # Reset databases
@@ -244,6 +250,10 @@ def data_query():
     """
     Prompts the user to input a player's name to look up, then displays the player's game history
     along with an option to plot their Elo history.
+
+    Returns:
+    --------
+    None
     """
 
     # Prompt the user to input the name of the player they want to look up
@@ -403,7 +413,9 @@ def clear_terminal():
 def main():
 
     while True:
+
         clear_terminal()
+
         command = input(
             "Input a command\n\n" +
             "1: Start new tournament day (do the name list first)\n" +
@@ -414,7 +426,9 @@ def main():
             "6: Print sorted players\n\n" +
             "ENTER: Exit\n\n"
         )
+
         clear_terminal()
+
         match command:
             case "1":
                 start_tournament()
