@@ -8,8 +8,18 @@ import game
 import save_and_load as sl
 import input_data
 
-# Methods of the main() while-loop
+"""
+Methods of the main() while-loop:
 
+1: Start new tournament day (do the name list first)
+2: Check for new data
+3: Reset and input all (CAUTION)
+4: Look at a profile
+5: Print TYLO leaderboard
+6: Print sorted players
+"""
+
+# 1: Start new tournament day (do the name list first)
 def start_tournament():
     """
     This method starts a tournament by reading player names from a txt file,
@@ -136,16 +146,28 @@ def start_tournament():
 
     input("\nPress enter to continue.")
 
-
 # _______________________________________________________________________
-# Checks if there is some new data to input. Directs into input_tournament() or input_games()
-# TODO: Comment and document
 
-
+# 2: Check for new data
 def update_from_data():
+    """
+    This method checks if there is some new data to input.
+    Directs into input_tournament() or input_games().
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+    """
+    
+    # New files to input
     new_tournament_files, new_free_games_files = sl.get_new_input_file_lists()
     new_files = new_tournament_files + new_free_games_files
 
+    # Check if there are any new files to update
     if len(new_files) == 0:
         print("Everything up to date. No new data files to update.")
         input("\nPress enter to continue.")
@@ -157,15 +179,23 @@ def update_from_data():
     print("New files found:\n")
     print(*new_files, sep="\n")
 
+    # Confirm if user wants to update the new files
     ans = input("\nDo you want to update this/these files? (y/n)\n")
     if ans != "y":
         return
 
+    # Free games data consist of two files: the games and new players
+    # These are paired up here
     free_games_csv_pairs = game.get_free_games_csv_pairs(new_files)
     free_games_idx = 0
 
+    # Loop through each file and update accordingly
     for f in new_files:
+
+        # Necessary info is in the file names
         file_info = f.split("_")[1]
+
+        # If file is a tournament file, do input_tournament
         if file_info in [
             "Beginners",
             "Beginners/Intermediate",
@@ -176,6 +206,8 @@ def update_from_data():
         ]:
             input_data.input_tournament(source_file=f)
             sl.save_input_source(f)
+
+        # If file is a free games file, do input_games. New players are created there, also.
         elif file_info == "Free":
             if f.split(" - ")[1] == "Games Output.csv":
                 input_data.input_games(free_games_csv_pairs[free_games_idx])
@@ -189,28 +221,34 @@ def update_from_data():
                     f"\nFree games file {f} not identified. This file will be skipped."
                 )
                 input("\nPress enter to continue.")
+        
+        # Every file should be either tournament or free games file
         else:
             print(f"\nFile {f} not identified. This file will be skipped.")
             input("\nPress enter to continue.")
 
-
 # _____________________________________________________________________
-# Reset all databases and input all, i.e. reset + update_from_data()
 
-
+# 3: Reset and input all (CAUTION)
 def reset_and_input_all():
+    """
+    Reset all databases and input all.
+    This consists of reset and update_from_data()
+    """
+
+    # Reset databases
     sl.reset_json_database("databases/players_database.json")
     sl.reset_json_database("databases/games_database.json")
     sl.reset_txt_file("databases/inputed_files.txt")
     print()
+
+    # Input all
     update_from_data()
 
-
 # _____________________________________________________________________
-# Data lookup
-# TODO: Comment and document
 
-
+# 4: Look at a profile
+# TODO: Clean and comment
 def data_query():
     x = input(
         "Input the name of the player you wish to look up or press enter to go back:\n"
@@ -235,12 +273,10 @@ def data_query():
         p.plot_elo_history()
     return
 
-
 # _____________________________________________________________________
-# Print Elo leaderboard
-# TODO: Comment and document
 
-
+# 5: Print TYLO leaderboard
+# # TODO: Clean and comment
 def print_elo_leaderboard():
     players = sl.load_players()
     players = sorted(players, key=lambda h: h.elo, reverse=True)
@@ -301,7 +337,9 @@ def print_elo_leaderboard():
 
     input("\nPress enter to continue.")
 
+# _______________________________________________________________________
 
+# 6: Print sorted players
 def sort_players():
     players = sl.load_players()
 
@@ -318,29 +356,26 @@ def sort_players():
 
     input("\nPress enter to continue.")
 
+# _______________________________________________________________________
 
 def clear_terminal():
     os.system("cls" if os.name == "nt" else "clear")  # Clear terminal
 
-
 # _______________________________________________________________________
-# _______________________________________________________________________
-
 
 def main():
-    # TODO: Comment and document
-
-    # 1: Update databases
-    # 2: Reset and input all (caution)
-    # 3: Look at a profile
-    # 4: Print TYLO leaderboard
-    # Press enter to exit
 
     while True:
-        # System clears are commented out because different commands work for Linux and Windows
         clear_terminal()
         command = input(
-            "Input a command\n\n1: Start new tournament day (do the name list first)\n2: Check for new data\n3: Reset and input all (CAUTION)\n4: Look at a profile\n5: Print TYLO leaderboard\n6: Print sorted players\n\nENTER: Exit\n\n"
+            "Input a command\n\n" +
+            "1: Start new tournament day (do the name list first)\n" +
+            "2: Check for new data\n" +
+            "3: Reset and input all (CAUTION)\n" +
+            "4: Look at a profile\n" +
+            "5: Print TYLO leaderboard\n" +
+            "6: Print sorted players\n\n" +
+            "ENTER: Exit\n\n"
         )
         clear_terminal()
         match command:
@@ -358,7 +393,6 @@ def main():
             case "4":
                 data_query()
             case "5":
-                clear_terminal()
                 print_elo_leaderboard()
             case "6":
                 sort_players()
@@ -366,7 +400,6 @@ def main():
                 exit()
             case _:
                 print("Incorrect command")
-
 
 if __name__ == "__main__":
     main()
