@@ -18,6 +18,9 @@ class Game:
     
     def __str__(self):
         return f"[{self.date}] {self.white_name} ({self.white_elo}) {self.black_name} ({self.black_elo})"
+    
+    def __repr__(self):
+        return f"Game(w='{self.white_name}', b={self.black_name}, w_score={self.white_score})"
         
     def print_game(self, name):
         print(self, end=' ')

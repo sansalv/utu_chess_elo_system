@@ -17,10 +17,8 @@ class Player:
     def __str__(self):
         return f"{self.name} - TYLO rating: {self.elo} - Games played: {self.games_played}"
     
-    """
     def __repr__(self):
-        return f"Player(id={self.id}, name='{self.name}', rating={self.rating})"
-    """
+        return f"Player(name='{self.name}', rating={self.rating})"
 
     # Setter for elo and elo_history
     def update_elo_and_history(self, date, new_elo):
@@ -119,7 +117,7 @@ class Player:
 
 # Create new player instance. Starting Elo rating depends on the level
 # level 0 = beginner league, level 1 = intermediate league, level 2 = experienced league
-def newPlayer(name, level, date):
+def new_player(name, level, date):
     if level == 0: 		# starting at beginner league
         starting_elo = 500
     elif level == 1: 	# starting at intermediate league
@@ -134,7 +132,7 @@ def find_player(players, name):
 	for p in players:
 		if p.name == name:
 			return p
-	return 0
+	raise Exception(f"Player {name} not found!")
 
 def print_player_games(p, games):
 	print(p)
@@ -202,7 +200,7 @@ def get_tournament_group_lists(tournament_players):
         # Heuristics for the hard coding
         # - Prioritise even numbers. 
         # - Beginners have always even numbers.
-        # - len(intermediate) > len(experienced) > len(beginners)
+        # - len(intermediate) >= len(experienced) >= len(beginners)
         1: [1],
         2: [2],
         3: [3],
