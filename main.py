@@ -148,6 +148,7 @@ def start_tournament():
 
 # _______________________________________________________________________
 
+# 2: Check for new data
 def update_from_data():
     """
     This method checks if there is some new data to input.
@@ -228,6 +229,7 @@ def update_from_data():
 
 # _____________________________________________________________________
 
+# 3: Reset and input all (CAUTION)
 def reset_and_input_all():
     """
     Reset all databases and input all.
@@ -244,10 +246,9 @@ def reset_and_input_all():
     update_from_data()
 
 # _____________________________________________________________________
-# Data lookup
-# TODO: Comment and document
 
-
+# 4: Look at a profile
+# TODO: Clean and comment
 def data_query():
     x = input(
         "Input the name of the player you wish to look up or press enter to go back:\n"
@@ -272,12 +273,10 @@ def data_query():
         p.plot_elo_history()
     return
 
-
 # _____________________________________________________________________
-# Print Elo leaderboard
-# TODO: Comment and document
 
-
+# 5: Print TYLO leaderboard
+# # TODO: Clean and comment
 def print_elo_leaderboard():
     players = sl.load_players()
     players = sorted(players, key=lambda h: h.elo, reverse=True)
@@ -338,7 +337,9 @@ def print_elo_leaderboard():
 
     input("\nPress enter to continue.")
 
+# _______________________________________________________________________
 
+# 6: Print sorted players
 def sort_players():
     players = sl.load_players()
 
@@ -355,30 +356,16 @@ def sort_players():
 
     input("\nPress enter to continue.")
 
+# _______________________________________________________________________
 
 def clear_terminal():
     os.system("cls" if os.name == "nt" else "clear")  # Clear terminal
 
-
 # _______________________________________________________________________
-# _______________________________________________________________________
-
 
 def main():
-    # TODO: Comment and document
-
-    # 1: Start new tournament day (do the name list first)
-    # 2: Check for new data\n3: Reset and input all (CAUTION)
-    # 4: Reset and input all (CAUTION)
-    # 3: Look at a profile
-    # 5: Print TYLO leaderboard
-    # 6: Print sorted players
-    # ENTER: Exit
-    
-    # Press enter to exit
 
     while True:
-        # System clears are commented out because different commands work for Linux and Windows
         clear_terminal()
         command = input(
             "Input a command\n\n" +
@@ -406,7 +393,6 @@ def main():
             case "4":
                 data_query()
             case "5":
-                clear_terminal()
                 print_elo_leaderboard()
             case "6":
                 sort_players()
@@ -414,7 +400,6 @@ def main():
                 exit()
             case _:
                 print("Incorrect command")
-
 
 if __name__ == "__main__":
     main()
