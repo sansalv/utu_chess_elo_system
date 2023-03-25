@@ -40,7 +40,7 @@ def start_tournament():
 			
 			# Create new player and append it to all_players
 			level = int(input(f"What is the starting level of this player? (0=500, 1=1000, 2=1500)\n"))
-			new_player = player.newPlayer(name, level)
+			new_player = player.new_player(name, level)
 			all_players.append(new_player)
 
 	if is_new_players:
