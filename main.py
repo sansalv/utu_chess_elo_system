@@ -28,10 +28,6 @@ def start_tournament():
     suggesting tournament groups splits by reading their Elo ratings,
     and printing the randomized seating orders.
 
-    Parameters
-    ----------
-    None
-
     Returns
     -------
     None
@@ -154,10 +150,6 @@ def update_from_data():
     This method checks if there is some new data to input.
     Directs into input_tournament() or input_games().
 
-    Parameters
-    ----------
-    None
-
     Returns
     -------
     None
@@ -248,55 +240,80 @@ def reset_and_input_all():
 # _____________________________________________________________________
 
 # 4: Look at a profile
-# TODO: Clean and comment
 def data_query():
+    """
+    Prompts the user to input a player's name to look up, then displays the player's game history
+    along with an option to plot their Elo history.
+    """
+
+    # Prompt the user to input the name of the player they want to look up
     x = input(
-        "Input the name of the player you wish to look up or press enter to go back:\n"
+        "Input the name of the player you wish to look up or press enter to go back (Enter = Exit):\n"
     )
 
+    # If the user pressed enter, exit the function
     if x == "":
         return
+    
+    # Load the list of players from the database
     players = sl.load_players()
+
+    # Search for the player with the given name
     found = False
     for p in players:
         if p.name == x:
             found = True
             clear_terminal()
+            # Load the list of games from the database
             games = sl.load_games()
+            # Print the player's game history
             player.print_player_games(p, games)
             break
+
+    # If no player was found with the given name, display an error message and exit the function
     if found == False:
         input("No player with that name")
         return
+    
+    # Plot the player's Elo history
     plot = input("\nDo you want a Elo history plot? (y/n)\n")
     if plot == "y":
         p.plot_elo_history()
-    return
 
 # _____________________________________________________________________
 
 # 5: Print TYLO leaderboard
-# # TODO: Clean and comment
 def print_elo_leaderboard():
+    """
+    Prints the TYLO rating leaderboard for players and their rating history,
+    and shows optional plots of the leaderboard and rating history.
+
+    Returns:
+    --------
+    None
+    """
+
+    # Load players from file and sort by current elo rating
     players = sl.load_players()
     players = sorted(players, key=lambda h: h.elo, reverse=True)
 
-    i = 1
-    # TODO: print("TYLO rating leaderboard (last update: DATE):\n")
+    # Get the last update date from the last updated file
     with open("databases/inputed_files.txt", "r") as txt:
         files = txt.read().splitlines()
     date = files[-1].split("_")[0]
 
+    # Ask user if they want to filter players only by latest update
     ans = input("Do you want to filter players only by latest update? (y/n)\n")
-
     clear_terminal()
-
     if ans == "y":
+        # Filter players latest update
         players = [p for p in players if p.elo_history[-1][0] == date]
         print(f"TYLO rating leaderboard\n(players filtered by last update {date}):\n")
     else:
         print(f"Overall TYLO rating leaderboard\n(last update: {date}):\n")
 
+    # Print player name, current Elo rating, and Elo update from last update
+    i = 0
     for p in players:
         elo_update = str(p.elo_history[-1][1] - p.elo_history[-2][1])
         if elo_update[:1] != "-":
@@ -307,16 +324,21 @@ def print_elo_leaderboard():
             print(f"{i}: {p.elo}       {p.name}")
         i += 1
 
+    # Show a bar plot of the leaderboard if requested
     plot = input("\nDo you want a leaderboard bar plot? (y/n)\n")
     if plot == "y":
+        # Extract player names in format F. Lastname and ratings for plotting
         names = [f"{p.name[0]}. " + p.name.split(" ")[1] for p in reversed(players)]
         elos = [p.elo for p in reversed(players)]
+        # Create bar plot
         plt.barh(names, elos)
         plt.grid()
         plt.show()
 
+    # Show a Elo rating history plot for each player if requested
     plot2 = input("\nDo you want a TYLO rating history plot? (y/n)\n")
     if plot2 == "y":
+        # Plot rating history for each player
         for p in players:
             name = f"{p.name[0]}. " + p.name.split(" ")[1]
             dates = [eh[0] for eh in p.elo_history]
@@ -326,13 +348,13 @@ def print_elo_leaderboard():
             plt.gca().xaxis.set_major_locator(mdates.DayLocator())
             plt.plot(x, y, "-o", label=name)
 
+        # Add legend to plot
         plt.legend(bbox_to_anchor=(1.04, 0.5), loc="center left", borderaxespad=0)
 
         plt.gcf().autofmt_xdate()
         plt.xlabel("Date")
         plt.ylabel("TYLO rating")
         plt.grid()
-        # plt.legend()
         plt.show()
 
     input("\nPress enter to continue.")
@@ -341,14 +363,28 @@ def print_elo_leaderboard():
 
 # 6: Print sorted players
 def sort_players():
+    """
+    Sorts the players by a user-selected criterion and prints the sorted leaderboard.
+
+    Returns
+    -------
+    None
+    """
+
+    # Load the list of players from the database
     players = sl.load_players()
 
+    # Prompt the user to select the criterion for sorting
     ans = input("How do you want to sort players? (n = number of games)\n")
     clear_terminal()
+
+    # Sort the players by the number of games played
     if ans == "n":
         players = sorted(players, key=lambda h: h.games_played, reverse=True)
         print("Players sorted by their number of games played:")
         print("games played, name (TYLO rating)\n")
+
+    # Print the sorted leaderboard
     i = 1
     for p in players:
         print(f"{i}: {p.games_played}, {p.name} ({p.elo})")
@@ -359,7 +395,8 @@ def sort_players():
 # _______________________________________________________________________
 
 def clear_terminal():
-    os.system("cls" if os.name == "nt" else "clear")  # Clear terminal
+    # There are different commands to Windows, Mac and Linux to clear terminal
+    os.system("cls" if os.name == "nt" else "clear") 
 
 # _______________________________________________________________________
 
