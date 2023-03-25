@@ -1,39 +1,55 @@
+import datetime as dt
+import os
+import random as rd
+import matplotlib.dates as mdates
+import matplotlib.pyplot as plt
 import player
 import game
 import save_and_load as sl
 import input_data
 
-import random as rd
-import matplotlib.pyplot as plt
-import datetime as dt
-import matplotlib.dates as mdates
-import os  # For clearing terminal
-
 # Methods of the main() while-loop
 
-
 def start_tournament():
+    """
+    This method starts a tournament by reading player names from a txt file,
+    loading old players from a database,
+    finding new players and appending them to the old players list,
+    suggesting tournament groups splits by reading their Elo ratings,
+    and printing the randomized seating orders.
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+    """
+
     # Read tournament names from txt file
     with open("tournament_names.txt", "r") as f:
         tournament_names = f.read().split("\n")[2:]
 
-    # Load old players
+    # Load old players into a list
     all_players = sl.load_players()
 
-    # ___________________________________
-    # Find new players and append them to all_players list
+    # Check for new players and append them to all_players list
     is_new_players = False
     old_names = [p.name for p in all_players]
     for name in tournament_names:
-        # If new player found
+        # If new player is found
         if name not in old_names:
             is_new_players = True
 
             ans = input(
                 f"Is {name} a new player? Abort and correct name if there is a spelling error. (y/abort)\n"
             )
+
+            # If invalid answer, ask again
             while ans not in ["y", "abort"]:
                 ans = input("Try answering again (y/abort)\n")
+                
             if ans == "abort":
                 print("Databases didn't update. Try again.")
                 input("\nPress enter to continue.\n")
@@ -45,18 +61,19 @@ def start_tournament():
                     f"What is the starting level of this player? (0=500, 1=1000, 2=1500)\n"
                 )
             )
+
             new_player = player.new_player(name, level)
             all_players.append(new_player)
 
+    # If new players were found, save all players back into json database
     if is_new_players:
-        # Save all players back into json database
         sl.save_players(all_players)
         print("\nUpdated players to players_database.json successfully.\n")
-    # ___________________________________
 
-    # clear_terminal()
+    # tournament_players are the players who are in the tournament
     tournament_players = [p for p in all_players if p.name in tournament_names]
 
+    # Sort tournament players into beginner, intermediate and experienced groups
     sorted_lists = player.get_tournament_group_lists(tournament_players)
 
     # Suggest and correct tournament split
@@ -66,38 +83,57 @@ def start_tournament():
             print("----------------------------", file=f)
             name_elo_list = [(p.name, p.elo) for p in group]
             print(*name_elo_list, sep="\n", file=f)
+    
+    # Print message to user. The suggested split is at the txt file and it can be manually altered
     print()
     ans = input(
         "Suggested tournament split is now in tournament_split.txt. You can move players.\nAfter this, type continue/abort.\n"
     )
+    
+    # If invalid answer, ask again
     while ans not in ["continue", "abort"]:
         ans = input("Try answering again (continue/abort)\n")
+        
     if ans == "abort":
         return
 
+    # Read tournament split from txt file
     with open("tournament_split.txt", "r") as f:
+        # tournament_names_elos is a list of the txt file rows
+        # (either a player's name and elo or a --- line that splits groups)
         tournament_names_elos = f.read().split("\n")[2:]
 
-    # Create beginners, intermediate and experienced groups
+    # Create beginners, intermediate and experienced groups. The index is to track the groups
     groups = [[], [], []]
     group_index = 0
+
+    # Iterate through each row in the txt file
+    # Each row is either a player (name and elo) or a group splitting line
     for name_elo in tournament_names_elos:
         if name_elo not in ["", "----------------------------"]:
             groups[group_index].append(name_elo)
         else:
             group_index += 1
 
+    # Start printing the final group splits
     print("\n\nGroups in seating orders (random order):\n")
     print("----------------------------")
-    # Number of non-zero groups
+
+    # Print all non-zero groups (if there are only few players there are going to be less than 3 groups)
     n_groups = sum([1 if len(group) != 0 else 0 for group in groups])
     for i in range(n_groups):
+
+        # Print a groups in a random seating order
         rd.shuffle(groups[i])
         print(f"Group {i}:")
+
+        # Print only players names (and not their Elo ratings)
         for name_elo in groups[i]:
             ne = eval(name_elo)
             print(ne[0])
+
         print("----------------------------")
+
     input("\nPress enter to continue.")
 
 
