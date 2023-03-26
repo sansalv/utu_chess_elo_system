@@ -4,11 +4,24 @@ import datetime as dt
 import matplotlib.dates as mdates
 import numpy as np
 
-# TODO: Comment and document rest of this libraby
 # After Player class there are methods involving Player instances
 
-
 class Player:
+    """
+    A class representing a chess club player.
+
+    Attributes
+    ----------
+    name : str
+        The name of the player in format "Firstname Lastname".
+    elo : int
+        The current TYLO rating of the player.
+    elo_history : list of tuple
+        The player's TYLO rating history, where each tuple represents a date and a TYLO rating.
+    games_played : int
+        The number of games the player has played.
+    """
+
     def __init__(self, name, elo, elo_history, games_played):
         self.name = name
         self.elo = elo
@@ -25,10 +38,23 @@ class Player:
 
     # Setter for elo and elo_history
     def update_elo_and_history(self, date, new_elo):
+        """
+        Update the player's TYLO rating and rating history.
+
+        Parameters
+        ----------
+        date : str
+            The date of the rating update in the format "YYYY-MM-DD".
+        new_elo : int
+            The new TYLO rating of the player.
+        """
         self.elo = new_elo
         self.elo_history.append((date, new_elo))
 
     def plot_elo_history(self):
+        """
+        Plot the player's TYLO rating history.
+        """
         dates = [eh[0] for eh in self.elo_history]
         x = [dt.datetime.strptime(d, "%Y-%m-%d").date() for d in dates]
         y = [eh[1] for eh in self.elo_history]
@@ -40,12 +66,25 @@ class Player:
         plt.gcf().autofmt_xdate()
         plt.show()
 
+    # Method that returns new Elo rating from a SINGLE game
     def calculate_new_elo_single(self, opponent_elo, score):
         """
-        Method that returns new Elo rating from a SINGLE game
+        Calculates and returns new updated Elo rating from a SINGLE game.
+
+        Parameters
+        ----------
+        opponent_elo : int or float
+            The Elo rating of the opponent in the game.
+        score : int or float
+            The score obtained by the player in the game (0 for a loss, 0.5 for a draw, and 1 for a win).
+
+        Returns
+        -------
+        new_elo : int
+            The new Elo rating of the player after the game.
         """
 
-        # Define the K-factor from games played
+        # Define the K-factor from games played. New players get bigger Elo correction jumps.
         if self.games_played <= 10:
             K = 128
         elif self.games_played <= 20:
@@ -59,18 +98,28 @@ class Player:
         # Calculate new elo rating
         new_elo = self.elo + K * (score - expected_score)
 
-        # Round to nearest integer
+        # Round to the nearest integer
         new_elo = int(new_elo + 0.5)
 
         return new_elo
 
+    # Method that returns new Elo rating from games list (from whole tournament day)
     def calculate_new_elo_tournament(self, games):
         """
-        Method that returns new Elo rating from games list (from whole tournament day)
+        Calculates and returns new updated Elo rating from games list (from the whole tournament day).
+
+        Parameters
+        ----------
+        games : list of Game instances
+            The list of games played by the player during the tournament day.
+
+        Returns
+        -------
+        new_elo : int
+            The new Elo rating of the player after the tournament day.
         """
 
-        # Define the K-factor from games played
-        # (New players get bigger Elo correction jumps)
+        # Define the K-factor from games played. New players get bigger Elo correction jumps.
         if self.games_played <= 10:
             K = 128
         elif self.games_played <= 20:
@@ -78,11 +127,12 @@ class Player:
         else:
             K = 32
 
-        # Calculate score of the day vs. expected score of the day
+        # Calculate the player's score sum of the day and expected score sum of the day
         score_sum = 0
         expected_score_sum = 0
-        # Iterate games of the day
+        # Iterate all games of the day
         for g in games:
+            # Check if this player played with white or black in each game
             white = False
             black = False
             if self.name == g.white_name:
@@ -90,20 +140,27 @@ class Player:
             elif self.name == g.black_name:
                 black = True
             else:
-                continue  # Not your game
+                continue  # Not this player's game
 
-            # If your game
+            # Increase player's game count
             self.games_played += 1
 
+            # Get player's game score from the white_score
             if white:
                 score = g.white_score
                 opponent_elo = g.black_elo
             else:
                 score = 1 - g.white_score
                 opponent_elo = g.white_elo
+
+            # Add the game score to the player's score sum of the day
             score_sum += score
 
+            # Calculate the expected score of the game .
+            # This depends on the difference between the player's and opponent's rating
             expected_score = 1 / (1 + 10 ** ((opponent_elo - self.elo) / 400))
+
+            # Add the expected score to the player's expected sum of the day
             expected_score_sum += expected_score
 
         # Calculate new Elo rating
@@ -119,29 +176,68 @@ class Player:
 
 # Methods outside of class:
 
-
-# Create new player instance. Starting Elo rating depends on the level
-# level 0 = beginner league, level 1 = intermediate league, level 2 = experienced league
 def new_player(name, level, date):
-    if level == 0:  # starting at beginner league
+    """
+    This function creates a new instance of the Player class and sets its starting Elo rating
+    based on the chosen level of the player.
+
+    Parameters
+    ----------
+    name : str
+        The name of the player, in the format "Firstname Lastname"
+    level : int
+        The level of the player - 
+        0 (rating = 500), 1 (rating = 1000), or 2 (rating = 1500)
+    date : str
+        date when the player was created, in the format "YYYY-MM-DD"
+
+    Returns
+    -------
+    new_player : Player object
+        A new instance of the Player class with the chosen starting Elo rating,
+        an initial tuple in the elo_history containing the starting Elo rating and the date when it was set,
+        and games_played set to 0.
+    """
+
+    if level == 0:  # beginner level
         starting_elo = 500
-    elif level == 1:  # starting at intermediate league
+    elif level == 1:  # intermediate level
         starting_elo = 1000
-    elif level == 2:  # starting at experienced league
+    elif level == 2:  # experienced level
         starting_elo = 1500
+
+    # Create the new player object with initial elo_history tuple and set the games_played at zero.
     new_player = Player(
         name, starting_elo, [(date, starting_elo)], 0
-    )  #  games_played = 0
+    )
+
     return new_player
 
-
-# Return Player (instance) from name (string)
 def find_player(players, name):
-    for p in players:
-        if p.name == name:
-            return p
-    raise Exception(f"Player {name} not found!")
+    """
+    Search for a player by name in a list of Player instances.
 
+    Parameters
+    ----------
+    players : list
+        A list of Player instances to search through.
+    name : str
+        The name of the player to search for.
+
+    Returns
+    -------
+    player : Player instance
+        The Player instance with the matching name.
+
+    Raises
+    ------
+    ValueError: If no Player instance is found with the given name.
+    """
+    for player in players:
+        if player.name == name:
+            return player
+    # If no matching player is found, raise an exception with an informative message.
+    raise ValueError(f"No player found with name '{name}'")
 
 def print_player_games(p, games):
     print(p)
@@ -158,17 +254,17 @@ def print_player_games(p, games):
 
 def get_players_from_table(file_location):
     """
-    Gets list of players name from tournament table (pandas dataframe) and returns list of strings.
+    Returns the list of players name from tournament table (pandas dataframe) and returns list of strings.
 
     Parameters
     ----------
-    file_location : string
-            Location of the table of tournament games. In which Indexes and columns have players names.
+    file_location : str
+        Location of the table of tournament games. In which Indexes and columns have players names.
 
     Returns
     -------
-    player_list : list of strings
-            Player names in list of strings.
+    player_list : list
+        Player names in list of strings.
     """
     games_table = pd.read_csv(file_location, dtype=str, index_col=0)
     player_list = list(games_table.index)
@@ -177,45 +273,85 @@ def get_players_from_table(file_location):
 
 def get_unique_players_from_games_csv(file_location):
     """
+    Returns a list of unique player names from the "White Player" and "Black Player" columns of the CSV file.
+
     Parameters
     ----------
-    file_location : String
-        File location path of the file.
+    file_location : str
+        The path of the CSV file.
 
     Returns
     -------
-    List of String. All unique players from columns "White Player" and "Black Player".
+    unique_players : list
+        A list of unique player names as strings.
     """
-    free_games = pd.read_csv(file_location)
-    return list(
-        np.unique(np.hstack([free_games["White Player"], free_games["Black Player"]]))
+
+    # Read the CSV file into a Pandas DataFrame
+    games_df = pd.read_csv(file_location)
+
+
+    # Get the unique player names from the "White Player" and "Black Player" columns
+    unique_players = list(set(games_df["White Player"]).union(set(games_df["Black Player"])))
+
+    # Remove any null or empty player names from the list
+    unique_players = [player for player in unique_players if player]
+
+    # The old code, just in case, if the new code above doesn't work properly
+    """
+    unique_players = list(
+        np.unique(np.hstack([games_df["White Player"], games_df["Black Player"]]))
     )
+    """
+
+    return unique_players
 
 
 def get_new_players_with_level_from_games_csv(file_location):
     """
+    Reads free games CSV file and returns list of tuples,
+    with player name and starting TYLO rank (0, 1 or 2).
+    Eg. [("Elias Ervelä", 1), ("Santeri Salomaa", 2)]
+
     Parameters
     ----------
-    file_location : String
-        File location path of the file.
+    file_location : str
+        The path of the CSV file.
 
     Returns
     -------
-    List of tuples, with player name and starting TYLO rank (0, 1 or 2). Eg. [["Elias Ervelä", 1],["Santeri Salomaa",2]].
+    new_players_list : list
+        A list of tuples, in the format ("Firstname Lastname", int)
     """
+    # Read the CSV file into a Pandas DataFrame
     new_players_table = pd.read_csv(file_location)
-    new_players_list = []
-    for i in range(len(new_players_table)):
-        new_players_list.append(list(new_players_table.iloc[i]))
+
+    # Create the list
+    new_players_list = [list(new_players_table.iloc[i]) for i in range(len(new_players_table))]
+
     return new_players_list
 
 
 def get_tournament_group_lists(tournament_players):
+    """
+    Returns a list of groups of tournament players sorted by TYLO rating.
+
+    Parameters
+    ----------
+    tournament_players : list of Player objects
+        A list of player objects representing the tournament players.
+
+    Returns
+    -------
+    groups : list of lists of Player objects
+        A list of lists of player objects representing the tournament groups.
+    """
+
+    # Dictionary containing hard-coded group splits based on heuristics:
+    # - Prioritise even number of players.
+    # - Beginners group have always even number of players.
+    # - len(intermediate) >= len(experienced) >= len(beginners)
+    # TODO Do some better implementation than hard coding.  :DDD
     hard_coded_group_splits = {
-        # Heuristics for the hard coding
-        # - Prioritise even numbers.
-        # - Beginners have always even numbers.
-        # - len(intermediate) >= len(experienced) >= len(beginners)
         1: [1],
         2: [2],
         3: [3],
@@ -253,12 +389,11 @@ def get_tournament_group_lists(tournament_players):
         35: [10, 13, 12],
         36: [10, 14, 12],
     }
-    # TODO Do some better implementation than hard coding.  :DDD
 
-    # Sort players by elo, lowest first
+    # Sort players by TYLO rating, lowest first
     sorted_Players_list = sorted(tournament_players, key=lambda p: p.elo)
 
-    # If more than the amount thats hard coded, then split evenly.
+    # If there are more than 36 players, split them evenly into three groups
     if len(sorted_Players_list) > 36:
         groups = np.array_split(np.array(sorted_Players_list), 3)
         return [list(groups[0]), list(groups[1]), list(groups[2])]
@@ -268,19 +403,22 @@ def get_tournament_group_lists(tournament_players):
         group_split = hard_coded_group_splits[len(sorted_Players_list)]
 
         if len(group_split) == 3:
+            # Split players into three groups: beginners, intermediate, experienced
             beginners_group = sorted_Players_list[: group_split[0]]
-            intermediate_group = sorted_Players_list[
-                group_split[0] : group_split[0] + group_split[1]
-            ]
+            intermediate_group = sorted_Players_list[group_split[0] : group_split[0] + group_split[1]]
             experienced_group = sorted_Players_list[group_split[0] + group_split[1] :]
+
             groups = [beginners_group, intermediate_group, experienced_group]
 
         elif len(group_split) == 2:
+            # Split players into two groups: beginners and experienced
             beginners_group = sorted_Players_list[: group_split[0]]
             experienced_group = sorted_Players_list[group_split[0] :]
+
             groups = [beginners_group, experienced_group]
 
         elif len(group_split) == 1:
+            # Only a single group
             groups = [sorted_Players_list]
 
         return groups
