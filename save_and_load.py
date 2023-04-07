@@ -136,17 +136,7 @@ def save_new_games(new_games, filename="databases/games_database.json"):
     -------
     None
     """
-    # Convert new games to a list of dictionaries
-    new_game_dictionaries = [vars(g) for g in new_games]
 
-    # Open the JSON file in append mode
-    with open(filename, "a") as db:
-        # Write each new game dictionary as a separate line of JSON text
-        for game_dict in new_game_dictionaries:
-            db.write(json.dumps(game_dict, indent=4) + "\n")
-
-    # The old code. It is here, just in case, if the new append method above doesn't work.
-    """
     # Read old json
     with open(filename, "r") as db:
         old_json = db.read()
@@ -161,7 +151,6 @@ def save_new_games(new_games, filename="databases/games_database.json"):
     # Write the updated json
     with open(filename, "w") as db:
         db.write(updated_json)
-    """
 
 def load_players(filename="databases/players_database.json"):
     """

@@ -34,6 +34,8 @@ def start_tournament():
     -------
     None
     """
+    # Prompt user for the date of the tournament
+    date = input("Input date, in the format YYYY-MM-DD:\n")
 
     # Read tournament names from txt file
     with open("tournament_names.txt", "r") as f:
@@ -47,6 +49,7 @@ def start_tournament():
     old_names = [p.name for p in all_players]
     for name in tournament_names:
         # If new player is found
+
         if name not in old_names:
             is_new_players = True
 
@@ -59,7 +62,7 @@ def start_tournament():
                 ans = input("Try answering again (y/abort)\n")
                 
             if ans == "abort":
-                print("Databases didn't update. Try again.")
+                print("Databases didn't update.")
                 input("\nPress enter to continue.\n")
                 return
 
@@ -70,7 +73,7 @@ def start_tournament():
                 )
             )
 
-            new_player = player.new_player(name, level)
+            new_player = player.new_player(name, level, date)
             all_players.append(new_player)
 
     # If new players were found, save all players back into json database
@@ -323,7 +326,7 @@ def print_elo_leaderboard():
         print(f"Overall TYLO rating leaderboard\n(last update: {date}):\n")
 
     # Print player name, current Elo rating, and Elo update from last update
-    i = 0
+    i = 1
     for p in players:
         elo_update = str(p.elo_history[-1][1] - p.elo_history[-2][1])
         if elo_update[:1] != "-":
@@ -385,11 +388,17 @@ def sort_players():
     players = sl.load_players()
 
     # Prompt the user to select the criterion for sorting
-    ans = input("How do you want to sort players? (n = number of games)\n")
+    ans = input("How do you want to sort players?\n(a = all players for free games table \n n = number of games)\n")
     clear_terminal()
 
     # Sort the players by the number of games played
-    if ans == "n":
+    if ans == "a":
+        players = sorted(players, key=lambda h: h.games_played, reverse=True)
+        for p in players:
+            print(p.name)
+        input("\nCopy players and press enter.")
+        return
+    elif ans == "n":
         players = sorted(players, key=lambda h: h.games_played, reverse=True)
         print("Players sorted by their number of games played:")
         print("games played, name (TYLO rating)\n")
