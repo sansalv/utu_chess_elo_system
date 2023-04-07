@@ -9,19 +9,31 @@ input_tournament()
 input_games()
 """
 
-# _______________________________________________________________________
 # Tournament data input. Creates games and players from csv data and updated databases.
-
 
 # TODO: Comment rest of this properly
 def input_tournament(source_file):
-    # ___________________________________
-    # Info of the tournament
 
     print(f"\nInput tournament from file {source_file} started.")
+
     file_location = f"tournament_data/{source_file}"
     date = source_file.split("_")[0]
-    # ___________________________________
+
+    group_info = source_file.split("_")[1]
+    if group_info == "Beginners":
+        level = 0
+    elif group_info == "Intermediate":
+        level = 1
+    elif group_info == "Experienced":
+        level = 2
+    else:
+        print(f"Tournament file '{source_file}' with group identifier '{group_info}' not identified.")
+        level = int(
+            input(
+                f"Input manually the level of '{group_info}'\n(0=500=Beginner, 1=1000=Intermediate, 2=1500=Experienced, abort=abort)\n"
+            )
+        )
+    
     # Load old players from database
     all_players = (
         sl.load_players()
@@ -37,19 +49,6 @@ def input_tournament(source_file):
     for name in tournament_player_names:
         if name not in old_names:
             is_new_players = True
-            level = int(
-                input(
-                    f"What is the level of {name}?\n(0=500=Beginner, 1=1000=Intermediate, 2=1500=Experienced, abort=abort)\n"
-                )
-            )
-            while level not in [0, 1, 2, "abort"]:
-                level = int(
-                    input(
-                        "Try again.\n(0=500=Beginner, 1=1000=Intermediate, 2=1500=Experienced, abort=abort)\n"
-                    )
-                )
-            if level == "abort":
-                return
             new_player = player.new_player(name, level, date)
             new_players.append(new_player)
             all_players.append(new_player)
@@ -57,11 +56,6 @@ def input_tournament(source_file):
     if is_new_players:
         print(f"All new players:\n")
         print(*[(p.name, p.elo) for p in new_players], sep="\n")
-        ans = input("\nAre these correct? (y/abort)\n")
-        while ans not in ["y", "abort"]:
-            ans = input("\nTry again. (y/abort)")
-        if ans == "abort":
-            return
     # ___________________________________
     # Filter all players to tournament players
     tournament_players = [p for p in all_players if p.name in tournament_player_names]

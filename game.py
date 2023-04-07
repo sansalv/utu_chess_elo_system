@@ -2,12 +2,29 @@ from termcolor import colored
 import player
 import pandas as pd
 
-# TODO: Comment and document rest of this libraby
-
-# After Game class there are methods involving Game instances
-
+# After the Game class there are methods involving Game instances
 
 class Game:
+    """
+    A class representing a chess club game.
+
+    Attributes
+    ----------
+    date : str
+        The date of the game, in the format "YYYY-MM-DD"
+    white_name : str
+        The name of the player with white pieces, in the format "Firstname Lastname".
+    white_elo : int
+        The rating of the player with white pieces.
+    black_name : 
+        The name of the player with black pieces, in the format "Firstname Lastname".
+    black_elo : int
+        The rating of the player with black pieces.
+    white_score : int
+        The score of the white player, e.g. 0-1 game score would be 0 here.
+    source_file : str
+        The source file path.
+    """
     def __init__(
         self,
         date,
@@ -33,6 +50,24 @@ class Game:
         return f"Game(w='{self.white_name}', b={self.black_name}, w_score={self.white_score})"
 
     def print_game(self, name):
+        """
+        Print's one game's result personized to a one player.
+
+        Parameters
+        ----------
+        name : str
+            The name of the player, in the format "Firstname Lastname".
+
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        ValueError: If player is not found from his own game for some reason.
+        """
+
+        # Check if the player was 
         print(self, end=" ")
         if (name == self.white_name and self.white_score == 1) or (
             name == self.black_name and self.white_score == 0
@@ -40,14 +75,19 @@ class Game:
             print(colored("Victory", "yellow"))
         elif self.white_score == 0.5:
             print(colored("Draw", "light_blue"))
-        else:
+        elif (name == self.white_name and self.white_score == 0) or (
+            name == self.black_name and self.white_score == 1
+        ):
             print(colored("Defeat", "red"))
+        else:
+            raise ValueError(f"Player '{name}' not found from his game:\n" +
+                             f"Game(w='{self.white_name}', b={self.black_name}, w_score={self.white_score})")
 
 
 # _______________________________________________________________________
 # Methods to convert tournament .csv to games list:
 
-
+#-------
 def from_table_to_games_list(file_location, verbose=False):
     """
     Turns tournament game table (csv) in to list of games in format [white_name, black_name, white_result].
@@ -55,9 +95,9 @@ def from_table_to_games_list(file_location, verbose=False):
     Parameters
     ----------
     file_location : str
-            Location of the table of tournament games. In which Indexes and columns have players names, and in the cells there is info of who won. Eg. ww=white win, bl=black lose, bd=black draw.
+        Location of the table of tournament games. In which Indexes and columns have players names, and in the cells there is info of who won. Eg. ww=white win, bl=black lose, bd=black draw.
     verbose : bool
-            If True, print table and games_list.
+        If True, print table and games_list.
 
     Returns
     -------
