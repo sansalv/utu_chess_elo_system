@@ -7,6 +7,14 @@ import player
 import game
 import save_and_load as sl
 import input_data
+import crypter
+import time
+from pathlib import Path
+from cryptography.fernet import InvalidToken
+
+
+PASSWORD_CHECKER_FILE = Path(__file__).parent / "password_checker.bin"
+
 
 """
 Methods of the main() while-loop:
@@ -413,6 +421,43 @@ def sort_players():
 
 # _______________________________________________________________________
 
+def check_password(password_checker_file: Path = PASSWORD_CHECKER_FILE):
+    """
+    This function checks the password against a password checker file.
+    It asks for a password and decrypts the password checker file with it.
+    If it successfully decrypts the file, the password is correct.
+    
+    Parameters
+    ----------
+    password_checker_file : Path, optional
+        Path to the password checker file. The default is PASSWORD_CHECKER_FILE.
+    """
+    clear_terminal()
+    
+    # This is the expected response after decrypting the password checker file.
+    response = (
+        "Kiitos, että luet koodiamme. Tää meidän salasanasysteemi ei oo kauheen "
+        "hyvä mut tarpeeks hyvä tähän tarkotukseen :DDDD."
+    )
+    while True:
+        password = input("Input password:\n")
+        clear_terminal()
+
+        try:
+            decrypted_file = crypter.decrypt_file(password, password_checker_file)
+        except InvalidToken:
+            print("Incorrect password.")
+            continue
+
+        if decrypted_file != response:
+            print("Incorrect password")
+        else:
+            print("Welcome!")
+            time.sleep(1)
+            break
+
+# _______________________________________________________________________
+
 def clear_terminal():
     # There are different commands to Windows, Mac and Linux to clear terminal
     os.system("cls" if os.name == "nt" else "clear") 
@@ -420,6 +465,8 @@ def clear_terminal():
 # _______________________________________________________________________
 
 def main():
+    
+    check_password()
 
     while True:
 
