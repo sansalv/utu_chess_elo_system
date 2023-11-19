@@ -1,22 +1,6 @@
-import datetime as dt
-import os
-import random as rd
-import matplotlib.dates as mdates
-import matplotlib.pyplot as plt
-import player
-import game
-import save_and_load as sl
-import input_data
-import crypter
-import time
-from pathlib import Path
-from cryptography.fernet import InvalidToken
-
-
-PASSWORD_CHECKER_FILE = Path(__file__).parent / "password_checker.bin"
-
-
 """
+Module containing the UI for menu while loop.
+
 Methods of the main() while-loop:
 
 1: Start new tournament day (do the name list first)
@@ -27,7 +11,28 @@ Methods of the main() while-loop:
 6: Print sorted players
 """
 
-# _______________________________________________________________________
+import datetime as dt
+import os
+import random as rd
+import matplotlib.dates as mdates
+import matplotlib.pyplot as plt
+import player
+import game
+import save_and_load as sl
+import input_data
+from pathlib import Path
+import crypter
+import time
+from pathlib import Path
+from cryptography.fernet import InvalidToken
+
+
+PASSWORD_CHECKER_FILE = Path(__file__).parent / "password_checker.bin"
+DECRYPTED_DATA_FOLDER = Path(__file__).parent.parent / "decrypted_data"
+GAMES_DATABASE = DECRYPTED_DATA_FOLDER / "games_database.json"
+PLAYERS_DATABASE = DECRYPTED_DATA_FOLDER / "players_database.json"
+INPUTED_FILES = DECRYPTED_DATA_FOLDER / "inputed_files.txt"
+
 
 # 1: Start new tournament day (do the name list first)
 def start_tournament():
@@ -246,9 +251,9 @@ def reset_and_input_all():
     """
 
     # Reset databases
-    sl.reset_json_database("databases/players_database.json")
-    sl.reset_json_database("databases/games_database.json")
-    sl.reset_txt_file("databases/inputed_files.txt")
+    sl.reset_json_database(PLAYERS_DATABASE)
+    sl.reset_json_database(GAMES_DATABASE)
+    sl.reset_txt_file(INPUTED_FILES)
     print()
 
     # Input all
@@ -319,7 +324,7 @@ def print_elo_leaderboard():
     players = sorted(players, key=lambda h: h.elo, reverse=True)
 
     # Get the last update date from the last updated file
-    with open("databases/inputed_files.txt", "r") as txt:
+    with open(INPUTED_FILES, "r") as txt:
         files = txt.read().splitlines()
     date = files[-1].split("_")[0]
 

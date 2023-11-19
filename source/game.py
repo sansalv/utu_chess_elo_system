@@ -1,6 +1,7 @@
 from termcolor import colored
 import player
 import pandas as pd
+from pathlib import Path
 
 # After the Game class there are methods involving Game instances
 
@@ -147,11 +148,11 @@ def from_table_to_games_list(file_location, verbose=False):
     return games_list
 
 
-def from_games_csv_to_games_list(file_location):
+def from_games_csv_to_games_list(file_location: Path):
     """
     Parameters
     ----------
-    file_location : String
+    file_location : Path
         File location path of the file.
 
     Returns
