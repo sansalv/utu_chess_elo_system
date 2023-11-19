@@ -1,6 +1,7 @@
 import save_and_load as sl
 import player
 import game
+from pathlib import Path
 
 """
 Library for data input methods:
@@ -9,16 +10,20 @@ input_tournament()
 input_games()
 """
 
-# Tournament data input. Creates games and players from csv data and updated databases.
+
+DECRYPTED_DATA_FOLDER = Path(__file__).parent.parent / "decrypted_data"
+TOURNAMENT_DATA_FOLDER = DECRYPTED_DATA_FOLDER / "tournament_data"
+FREE_RATED_GAMES_DATA_FOLDER = DECRYPTED_DATA_FOLDER / "free_rated_games_data"
+
 
 # TODO: Comment rest of this properly
-def input_tournament(source_file):
-
+# Tournament data input. Creates games and players from csv data and updated databases.
+def input_tournament(source_file: str, tournament_data_folder: Path = TOURNAMENT_DATA_FOLDER):
     print(f"\nInput tournament from file {source_file} started.")
 
-    file_location = f"tournament_data/{source_file}"
+    file_location = tournament_data_folder / source_file
     date = source_file.split("_")[0]
-
+    
     group_info = source_file.split("_")[1]
     if group_info == "Beginners":
         level = 0
@@ -27,13 +32,15 @@ def input_tournament(source_file):
     elif group_info == "Experienced":
         level = 2
     else:
-        print(f"Tournament file '{source_file}' with group identifier '{group_info}' not identified.")
+        print(
+            f"Tournament file '{source_file}' with group identifier '{group_info}' not identified."
+        )
         level = int(
             input(
                 f"Input manually the level of '{group_info}'\n(0=500=Beginner, 1=1000=Intermediate, 2=1500=Experienced, abort=abort)\n"
             )
         )
-    
+
     # Load old players from database
     all_players = (
         sl.load_players()
@@ -80,11 +87,14 @@ def input_tournament(source_file):
     input("\nPress enter to continue.")
 
 
-def input_games(free_games_csv_pair):
+def input_games(
+    free_games_csv_pair: list | tuple,
+    free_rated_games_data_folder: Path = FREE_RATED_GAMES_DATA_FOLDER,
+):
     source_file = free_games_csv_pair[0]
-    source_file_location = f"free_rated_games_data/{source_file}"
+    source_file_location = free_rated_games_data_folder / source_file
     new_players_file = free_games_csv_pair[1]
-    new_players_file_location = f"free_rated_games_data/{new_players_file}"
+    new_players_file_location = free_rated_games_data_folder/ new_players_file
 
     # ___________________________________
     # Info of the free rated games

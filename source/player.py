@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import datetime as dt
 import matplotlib.dates as mdates
 import numpy as np
+from pathlib import Path
 
 # After Player class there are methods involving Player instances
 
@@ -252,7 +253,7 @@ def print_player_games(p, games):
         print("No games found")
 
 
-def get_players_from_table(file_location):
+def get_players_from_table(file_location: Path):
     """
     Returns the list of players name from tournament table (pandas dataframe) and returns list of strings.
 
@@ -271,13 +272,13 @@ def get_players_from_table(file_location):
     return player_list
 
 
-def get_unique_players_from_games_csv(file_location):
+def get_unique_players_from_games_csv(file_location: Path):
     """
     Returns a list of unique player names from the "White Player" and "Black Player" columns of the CSV file.
 
     Parameters
     ----------
-    file_location : str
+    file_location : Path
         The path of the CSV file.
 
     Returns
