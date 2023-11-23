@@ -25,6 +25,8 @@ import crypter
 import time
 from pathlib import Path
 from cryptography.fernet import InvalidToken
+import shutil
+from tkinter import filedialog
 
 
 PASSWORD_CHECKER_FILE = Path(__file__).parent / "password_checker.bin"
@@ -159,6 +161,41 @@ def start_tournament():
         print("----------------------------")
 
     input("\nPress enter to continue.")
+
+# _______________________________________________________________________
+
+# 2: Input new source file
+def input_new_csv_and_update():
+    print(
+        "File name insructions:\n\n"
+        "The tournament csv file should be name in format:\n"
+        "%Y-%m-%d_Beginner/Intermediate/Experienced_Group[+ optional extra].csv\n\n"
+        "The free games csv file should be named in format:\n"
+        "%Y-%m-%d_Free_Rated_Games - Games/New Players Output.csv\n\n"
+    )
+    input("\nPress enter open file dialog GUI.")
+    try:
+        new_file_path_to_input = Path(filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")]))
+    except TypeError:
+        return
+
+    if not new_file_path_to_input.is_file():
+        print("Invalid file path or file does not exist.")
+        input("\nPress enter to go to menu.")
+        return
+
+    if "Free_Rated" in new_file_path_to_input.name:
+        destination_folder = DECRYPTED_DATA_FOLDER / "free_rated_games_data"
+    elif "Group" in new_file_path_to_input.name:
+        destination_folder = DECRYPTED_DATA_FOLDER / "tournament_data"
+    else:
+        print("Check the selected source file name, and retry!")
+        input("\nPress enter to go to menu.")
+        return
+
+    shutil.copy(new_file_path_to_input, destination_folder / new_file_path_to_input.name )
+    print(f"File copy-pasted successfully to source files folder '{new_file_path_to_input.parent.name}'!")
+    update_from_data()
 
 # _______________________________________________________________________
 
@@ -480,11 +517,12 @@ def main():
         command = input(
             "Input a command\n\n" +
             "1: Start new tournament day (do the name list first)\n" +
-            "2: Check for new data\n" +
-            "3: Reset and input all (CAUTION)\n" +
-            "4: Look at a profile\n" +
-            "5: Print TYLO leaderboard\n" +
-            "6: Print sorted players\n\n" +
+            "2: Input data file (.csv) and update databases\n" +
+            "3: Check for new data\n" +
+            "4: Reset and input all (CAUTION)\n" +
+            "5: Look at a profile\n" +
+            "6: Print TYLO leaderboard\n" +
+            "7: Print sorted players\n\n" +
             "ENTER: Exit\n\n"
         )
 
@@ -494,22 +532,25 @@ def main():
             case "1":
                 start_tournament()
             case "2":
-                update_from_data()
+                input_new_csv_and_update()
             case "3":
+                update_from_data()
+            case "4":
                 ans = input(
                     "WARNING:\nAre you sure you want to reset (and input) all? (y/n)\n"
                 )
                 if ans == "y":
                     clear_terminal()
                     reset_and_input_all()
-            case "4":
-                data_query()
             case "5":
-                print_elo_leaderboard()
+                data_query()
             case "6":
+                print_elo_leaderboard()
+            case "7":
                 sort_players()
             case "":
                 exit()
+            
             case _:
                 print("Incorrect command")
 
