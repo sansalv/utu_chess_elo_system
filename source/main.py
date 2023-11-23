@@ -1,14 +1,5 @@
 """
 Module containing the UI for menu while loop.
-
-Methods of the main() while-loop:
-
-1: Start new tournament day (do the name list first)
-2: Check for new data
-3: Reset and input all (CAUTION)
-4: Look at a profile
-5: Print TYLO leaderboard
-6: Print sorted players
 """
 
 import datetime as dt
@@ -27,10 +18,13 @@ from pathlib import Path
 from cryptography.fernet import InvalidToken
 import shutil
 from tkinter import filedialog
+import io
+import zipfile
 
 
 PASSWORD_CHECKER_FILE = Path(__file__).parent / "password_checker.bin"
 DECRYPTED_DATA_FOLDER = Path(__file__).parent.parent / "decrypted_data"
+ENCRYPTED_DATA_FILE = Path(__file__).parent.parent / "encrypted_data.bin"
 GAMES_DATABASE = DECRYPTED_DATA_FOLDER / "games_database.json"
 PLAYERS_DATABASE = DECRYPTED_DATA_FOLDER / "players_database.json"
 INPUTED_FILES = DECRYPTED_DATA_FOLDER / "inputed_files.txt"
@@ -486,7 +480,7 @@ def check_password(password_checker_file: Path = PASSWORD_CHECKER_FILE):
         clear_terminal()
 
         try:
-            decrypted_file = crypter.decrypt_file(password, password_checker_file)
+            decrypted_file = crypter.decrypt_file(password, password_checker_file).decode()
         except InvalidToken:
             print("Incorrect password.")
             continue
@@ -498,6 +492,25 @@ def check_password(password_checker_file: Path = PASSWORD_CHECKER_FILE):
             time.sleep(1)
             break
 
+    return password
+
+
+#_______________________________________________________________________
+
+def decrypt_database(password: str, encrypted_data_file_path: Path = ENCRYPTED_DATA_FILE):
+
+    decrypted_file = crypter.decrypt_file(password, encrypted_data_file_path)
+    
+    # Create a BytesIO object from the zipped bytes
+    zipped_io = io.BytesIO(decrypted_file)
+
+    # Create a ZipFile object from the BytesIO object
+    with zipfile.ZipFile(zipped_io, 'r') as zip_ref:
+        # Extract all files to the destination directory
+        zip_ref.extractall(DECRYPTED_DATA_FOLDER.parent)
+    # Close the BytesIO object
+    zipped_io.close()
+
 # _______________________________________________________________________
 
 def clear_terminal():
@@ -508,7 +521,8 @@ def clear_terminal():
 
 def main():
     
-    check_password()
+    password = check_password()
+    decrypt_database(password)
 
     while True:
 
@@ -550,7 +564,6 @@ def main():
                 sort_players()
             case "":
                 exit()
-            
             case _:
                 print("Incorrect command")
 
