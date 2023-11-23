@@ -1,14 +1,5 @@
 """
 Module containing the UI for menu while loop.
-
-Methods of the main() while-loop:
-
-1: Start new tournament day (do the name list first)
-2: Check for new data
-3: Reset and input all (CAUTION)
-4: Look at a profile
-5: Print TYLO leaderboard
-6: Print sorted players
 """
 
 import datetime as dt
@@ -25,13 +16,10 @@ import crypter
 import time
 from pathlib import Path
 from cryptography.fernet import InvalidToken
-<<<<<<< HEAD
-import io
-import zipfile
-=======
 import shutil
 from tkinter import filedialog
->>>>>>> fc9f5d60e06a895a21595a3827c6222e5f9572c7
+import io
+import zipfile
 
 
 PASSWORD_CHECKER_FILE = Path(__file__).parent / "password_checker.bin"
@@ -503,7 +491,7 @@ def check_password(password_checker_file: Path = PASSWORD_CHECKER_FILE):
             print("Welcome!")
             time.sleep(1)
             break
-    
+
     return password
 
 
@@ -522,8 +510,6 @@ def decrypt_database(password: str, encrypted_data_file_path: Path = ENCRYPTED_D
         zip_ref.extractall(DECRYPTED_DATA_FOLDER.parent)
     # Close the BytesIO object
     zipped_io.close()
-
-
 
 # _______________________________________________________________________
 
@@ -578,7 +564,6 @@ def main():
                 sort_players()
             case "":
                 exit()
-            
             case _:
                 print("Incorrect command")
 
