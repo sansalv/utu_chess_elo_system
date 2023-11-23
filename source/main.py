@@ -36,7 +36,7 @@ PLAYERS_DATABASE = DECRYPTED_DATA_FOLDER / "players_database.json"
 INPUTED_FILES = DECRYPTED_DATA_FOLDER / "inputed_files.txt"
 
 
-# 1: Start new tournament day (do the name list first)
+# Start new tournament day (do the name list first)
 def start_tournament():
     """
     This method starts a tournament by reading player names from a txt file,
@@ -164,7 +164,7 @@ def start_tournament():
 
 # _______________________________________________________________________
 
-# 2: Input new source file
+# Input new source file
 def input_new_csv_and_update():
     print(
         "File name insructions:\n\n"
@@ -199,7 +199,7 @@ def input_new_csv_and_update():
 
 # _______________________________________________________________________
 
-# 2: Check for new data
+# Check for new data
 def update_from_data():
     """
     This method checks if there is some new data to input.
@@ -276,7 +276,7 @@ def update_from_data():
 
 # _____________________________________________________________________
 
-# 3: Reset and input all (CAUTION)
+# Reset and input all (CAUTION)
 def reset_and_input_all():
     """
     Reset all databases and input all.
@@ -298,7 +298,7 @@ def reset_and_input_all():
 
 # _____________________________________________________________________
 
-# 4: Look at a profile
+# Look at a profile
 def data_query():
     """
     Prompts the user to input a player's name to look up, then displays the player's game history
@@ -345,7 +345,7 @@ def data_query():
 
 # _____________________________________________________________________
 
-# 5: Print TYLO leaderboard
+# Print TYLO leaderboard
 def print_elo_leaderboard():
     """
     Prints the TYLO rating leaderboard for players and their rating history,
@@ -424,7 +424,7 @@ def print_elo_leaderboard():
 
 # _______________________________________________________________________
 
-# 6: Print sorted players
+# Print sorted players
 def sort_players():
     """
     Sorts the players by a user-selected criterion and prints the sorted leaderboard.
