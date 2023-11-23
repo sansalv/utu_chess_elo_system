@@ -10,7 +10,7 @@ def generate_key(password):
     base64_password = base64.urlsafe_b64encode(sha256_password)
     return base64_password
 
-def decrypt_file(password: str, source_file: Path) -> str:
+def decrypt_file(password: str, source_file: Path) -> bytes:
     """
     Decrypts a file and returns the decrypted data as a string.
     
@@ -20,15 +20,20 @@ def decrypt_file(password: str, source_file: Path) -> str:
         The password used to decrypt the file.
     source_file : Path
         The path to the file to decrypt.
+
+    Returns
+    -------
+    decrypted : bytes
+        The decrypted data.
     """
     key = generate_key(password)
     fernet = Fernet(key)
 
     with open(source_file, 'rb') as file:
         encrypted = file.read()
-    decrypted = fernet.decrypt(encrypted)
+    decrypted_bytes = fernet.decrypt(encrypted)
 
-    return decrypted.decode()
+    return decrypted_bytes
 
 
 def encrypt_file(password: str, source_file: Path) -> str:
