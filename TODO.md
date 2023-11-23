@@ -1,6 +1,25 @@
 ## Tip: Install TODO Tree extension
 
-### Some future ideas
+
+## Kriittiset:
+
+### Elias Ervelä:
+1. salasanalla kryptatut database tiedostot (missä source filet ja database jsonit)
+2. menunäyttöön ajankohtaiset tiedot, mm. käytetty database-tiedoston nimi ja pvm?
+3. turnauksen aloittaminen tekee ja avaa nimien inputtaamista varten txt-tiedoston (jota ei gittiin)
+
+### Santeri Salomaa:
+1. exe tiedosto, mistä aukeaa UI, ja joka kysyy salasanaa
+2. file explorer uuden source csv:n inputtaamiseen
+3. käyttöohjeet gitin README-tiedostoon
+
+
+## Ei kriittiset:
+
+- GUI menulle, missä terminaalinäyttö toisessa ikkunassa
+
+
+## Old ideas:
 
 - Document and comment e.g. rest of main.py, player.py and game.py files
 - Do edit player info (that changes also the games) to main()
