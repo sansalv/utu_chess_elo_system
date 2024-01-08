@@ -4,10 +4,10 @@
 ## Kriittiset:
 
 ### Elias Ervelä:
-1. salasanalla kryptatut database tiedostot (missä source filet ja database jsonit)
+1. ~~salasanalla kryptatut database tiedostot (missä source filet ja database jsonit)~~
    - ~~Decrypt database~~
-   - Encrypt database after every database update
-2. menunäyttöön ajankohtaiset tiedot, mm. käytetty database-tiedoston nimi ja pvm?
+   - ~~Encrypt database after every database update~~
+2. ~~menunäyttöön ajankohtaiset tiedot, mm. käytetty database-tiedoston nimi ja pvm?~~
 3. turnauksen aloittaminen tekee ja avaa nimien inputtaamista varten txt-tiedoston (jota ei gittiin)
 
 ### Santeri Salomaa:

@@ -468,7 +468,6 @@ def check_password(password_checker_file: Path = PASSWORD_CHECKER_FILE):
     password_checker_file : Path, optional
         Path to the password checker file. The default is PASSWORD_CHECKER_FILE.
     """
-    clear_terminal()
     
     # This is the expected response after decrypting the password checker file.
     response = (
@@ -477,7 +476,6 @@ def check_password(password_checker_file: Path = PASSWORD_CHECKER_FILE):
     )
     while True:
         password = input("Input password:\n")
-        clear_terminal()
 
         try:
             decrypted_file = crypter.decrypt_file(password, password_checker_file).decode()
@@ -488,12 +486,28 @@ def check_password(password_checker_file: Path = PASSWORD_CHECKER_FILE):
         if decrypted_file != response:
             print("Incorrect password")
         else:
-            print("Welcome!")
-            time.sleep(1)
             break
 
     return password
 
+# _______________________________________________________________________
+
+def print_database_status():
+    
+    # Check the latest file update date
+    with open(INPUTED_FILES, "r") as txt:
+        files = txt.read().splitlines()
+    latest_update_date = files[-1].split("_")[0]
+
+    # Check number of players in database
+    players = sl.load_players()
+    n_players = len(players)
+    
+    # Check number of games in database
+    games = sl.load_games()
+    n_games = len(games)
+
+    print(f"Date of the latest update file: {latest_update_date}. Number of players in database: {n_players}. Number of games in databse: {n_games}.\n")
 
 # _______________________________________________________________________
 
@@ -505,16 +519,26 @@ def clear_terminal():
 
 def main():
     
+    clear_terminal()
     password = check_password()
+    print("Correct password.")
+    time.sleep(0.2)
+    print("decrypting database from \"encrypted_data.bin\"...")
     crypter.decrypt_database(password)
-
-    #TODO:
-    # Debug why the that zip gets extracted, but not the modified zip.
-
+    time.sleep(0.2)
+    print("database decrypted to \"decrypted_data\\.\".")
+    time.sleep(0.6)
+    print("Welcome!")
+    time.sleep(1.2)
 
     while True:
 
         clear_terminal()
+
+        print("UNIVERSITY HILL CHESS CLUB RANKING SYSTEM")
+        
+        print_database_status()
+
 
         command = input(
             "Input a command\n\n" +
@@ -536,9 +560,13 @@ def main():
             case "2":
                 input_new_csv_and_update()
                 crypter.encrypt_database(password)
+                print("database encrypted from \"decrypted_data\\.\"... to \"encrypted_data.bin\".")
+                time.sleep(1)
             case "3":
                 update_from_data()
                 crypter.encrypt_database(password)
+                print("database encrypted from \"decrypted_data\\.\"... to \"encrypted_data.bin\".")
+                time.sleep(1)
             case "4":
                 ans = input(
                     "WARNING:\nAre you sure you want to reset (and input) all? (y/n)\n"
@@ -547,6 +575,8 @@ def main():
                     clear_terminal()
                     reset_and_input_all()
                     crypter.encrypt_database(password)
+                    print("database encrypted from \"decrypted_data\\.\"... to \"encrypted_data.bin\".")
+                    time.sleep(1)
             case "5":
                 data_query()
             case "6":

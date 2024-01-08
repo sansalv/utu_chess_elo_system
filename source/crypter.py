@@ -93,10 +93,6 @@ def encrypt_database(password: str, decrypted_data_folder_path: Path = DECRYPTED
             # Write the file to the zip file with the new arcname
             zip_file.write(file, arcname=relative_path)
 
-    # Save the zip file to the same folder as the encrypted_data file
-    with open(DECRYPTED_DATA_FOLDER.parent / "decrypted_data.zip", "wb") as file:
-        file.write(zipped_io.getvalue())
-
     # Get the bytes of the zipped file
     zipped_bytes = zipped_io.getvalue()
 
