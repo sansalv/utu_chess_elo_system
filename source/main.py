@@ -495,22 +495,6 @@ def check_password(password_checker_file: Path = PASSWORD_CHECKER_FILE):
     return password
 
 
-#_______________________________________________________________________
-
-def decrypt_database(password: str, encrypted_data_file_path: Path = ENCRYPTED_DATA_FILE):
-
-    decrypted_file = crypter.decrypt_file(password, encrypted_data_file_path)
-    
-    # Create a BytesIO object from the zipped bytes
-    zipped_io = io.BytesIO(decrypted_file)
-
-    # Create a ZipFile object from the BytesIO object
-    with zipfile.ZipFile(zipped_io, 'r') as zip_ref:
-        # Extract all files to the destination directory
-        zip_ref.extractall(DECRYPTED_DATA_FOLDER.parent)
-    # Close the BytesIO object
-    zipped_io.close()
-
 # _______________________________________________________________________
 
 def clear_terminal():
@@ -522,7 +506,11 @@ def clear_terminal():
 def main():
     
     password = check_password()
-    decrypt_database(password)
+    crypter.decrypt_database(password)
+
+    #TODO:
+    # Debug why the that zip gets extracted, but not the modified zip.
+
 
     while True:
 
@@ -547,8 +535,10 @@ def main():
                 start_tournament()
             case "2":
                 input_new_csv_and_update()
+                crypter.encrypt_database(password)
             case "3":
                 update_from_data()
+                crypter.encrypt_database(password)
             case "4":
                 ans = input(
                     "WARNING:\nAre you sure you want to reset (and input) all? (y/n)\n"
@@ -556,6 +546,7 @@ def main():
                 if ans == "y":
                     clear_terminal()
                     reset_and_input_all()
+                    crypter.encrypt_database(password)
             case "5":
                 data_query()
             case "6":
