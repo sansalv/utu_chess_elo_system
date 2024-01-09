@@ -19,6 +19,16 @@ import player
 import game
 import save_and_load as sl
 import input_data
+from pathlib import Path
+import crypter
+import time
+from pathlib import Path
+from cryptography.fernet import InvalidToken
+import shutil
+from tkinter import filedialog, Tk
+import io
+import zipfile
+
 from tournament_starter import start_tournament
 
 
@@ -30,44 +40,61 @@ PLAYERS_DATABASE = DECRYPTED_DATA_FOLDER / "players_database.json"
 INPUTED_FILES = DECRYPTED_DATA_FOLDER / "inputed_files.txt"
 
 
-# Input new source file
-def input_new_csv_and_update():
+
+# Input new source files, and update
+def input_new_csv_files_and_update_databases():
+    """docs"""
+
     print(
+        "File explorer window opened. \n\n"
         "File name insructions:\n\n"
         "The tournament csv file should be name in format:\n"
         "%Y-%m-%d_Beginner/Intermediate/Experienced_Group[+ optional extra].csv\n\n"
         "The free games csv file should be named in format:\n"
         "%Y-%m-%d_Free_Rated_Games - Games/New Players Output.csv\n\n"
     )
-    input("\nPress enter open file dialog GUI.")
+    input_more = "y"
+    while input_more == "y":
+        _input_new_csv()
+        input_more = input("Do you want to input more csv files? (y/n)\n")
+
+    update_from_data()
+
+
+def _input_new_csv():
     try:
+        root = Tk()
+        root.withdraw()  # Hide the main window
+        root.attributes("-topmost", True)  # Bring the root window to the front
         new_file_path_to_input = Path(
             filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
         )
+        # root.attributes('-topmost', False)  # Set the root window back to normal
     except TypeError:
         return
 
     if not new_file_path_to_input.is_file():
         print("Invalid file path or file does not exist.")
-        input("\nPress enter to go to menu.")
+        # input("\nPress enter to go to menu.")
         return
 
-    if "Free_Rated" in new_file_path_to_input.name:
+    if "free_rated" in new_file_path_to_input.name.lower():
         destination_folder = DECRYPTED_DATA_FOLDER / "free_rated_games_data"
-    elif "Group" in new_file_path_to_input.name:
+    elif "group" in new_file_path_to_input.name.lower():
         destination_folder = DECRYPTED_DATA_FOLDER / "tournament_data"
     else:
         print("Check the selected source file name, and retry!")
-        input("\nPress enter to go to menu.")
+        # input("\nPress enter to go to menu.")
         return
 
+    print(f'"{new_file_path_to_input.name}"')
     shutil.copy(
         new_file_path_to_input, destination_folder / new_file_path_to_input.name
     )
     print(
-        f"File copy-pasted successfully to source files folder '{new_file_path_to_input.parent.name}'!"
+        f"File copy-pasted successfully to source files folder from '{new_file_path_to_input.parent.name}'!\n"
     )
-    update_from_data()
+
 
 
 # _______________________________________________________________________
@@ -270,7 +297,12 @@ def print_elo_leaderboard():
     plot = input("\nDo you want a leaderboard bar plot? (y/n)\n")
     if plot == "y":
         # Extract player names in format F. Lastname and ratings for plotting
-        names = [f"{p.name[0]}. " + p.name.split(" ")[1] for p in reversed(players)]
+        names = []
+        for p in reversed(players):
+            try:
+                names.append(f"{p.name[0]}. " + p.name.split(" ")[1])
+            except IndexError:
+                names.append(p.name)
         elos = [p.elo for p in reversed(players)]
         # Create bar plot
         plt.barh(names, elos)
@@ -282,7 +314,10 @@ def print_elo_leaderboard():
     if plot2 == "y":
         # Plot rating history for each player
         for p in players:
-            name = f"{p.name[0]}. " + p.name.split(" ")[1]
+            try:
+                name = f"{p.name[0]}. " + p.name.split(" ")[1]
+            except IndexError:
+                name = p.name
             dates = [eh[0] for eh in p.elo_history]
             x = [dt.datetime.strptime(d, "%Y-%m-%d").date() for d in dates]
             plt.gca().xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d"))
@@ -359,7 +394,6 @@ def check_password(password_checker_file: Path = PASSWORD_CHECKER_FILE):
     password_checker_file : Path, optional
         Path to the password checker file. The default is PASSWORD_CHECKER_FILE.
     """
-    clear_terminal()
 
     # This is the expected response after decrypting the password checker file.
     response = (
@@ -368,7 +402,6 @@ def check_password(password_checker_file: Path = PASSWORD_CHECKER_FILE):
     )
     while True:
         password = input("Input password:\n")
-        clear_terminal()
 
         try:
             decrypted_file = crypter.decrypt_file(
@@ -381,8 +414,6 @@ def check_password(password_checker_file: Path = PASSWORD_CHECKER_FILE):
         if decrypted_file != response:
             print("Incorrect password")
         else:
-            print("Welcome!")
-            time.sleep(1)
             break
 
     return password
@@ -391,20 +422,29 @@ def check_password(password_checker_file: Path = PASSWORD_CHECKER_FILE):
 # _______________________________________________________________________
 
 
-def decrypt_database(
-    password: str, encrypted_data_file_path: Path = ENCRYPTED_DATA_FILE
-):
-    decrypted_file = crypter.decrypt_file(password, encrypted_data_file_path)
+def print_database_status():
+    # Check the latest file update date
+    with open(INPUTED_FILES, "r") as txt:
+        files = txt.read().splitlines()
+    try:
+        latest_update_date = files[-1].split("_")[0]
+    except IndexError:
+        latest_update_date = "No update files found"
 
-    # Create a BytesIO object from the zipped bytes
-    zipped_io = io.BytesIO(decrypted_file)
+    # Check number of players in database
+    players = sl.load_players()
+    n_players = len(players)
 
-    # Create a ZipFile object from the BytesIO object
-    with zipfile.ZipFile(zipped_io, "r") as zip_ref:
-        # Extract all files to the destination directory
-        zip_ref.extractall(DECRYPTED_DATA_FOLDER.parent)
-    # Close the BytesIO object
-    zipped_io.close()
+    # Check number of games in database
+    games = sl.load_games()
+    n_games = len(games)
+
+    print(
+        f"Date of the latest update file: {latest_update_date}.\n"
+        f"Number of players in database: {n_players}.\n"
+        f"Number of games in databse: {n_games}.\n"
+    )
+
 
 
 # _______________________________________________________________________
@@ -419,11 +459,24 @@ def clear_terminal():
 
 
 def main():
+    clear_terminal()
     password = check_password()
-    decrypt_database(password)
+    print("Correct password.")
+    time.sleep(0.2)
+    print('decrypting database from "encrypted_data.bin"...')
+    crypter.decrypt_database(password)
+    time.sleep(0.2)
+    print('database decrypted to "decrypted_data\\.".')
+    time.sleep(0.6)
+    print("Welcome!")
+    time.sleep(1.2)
 
     while True:
         clear_terminal()
+
+        print("UNIVERSITY HILL CHESS CLUB RANKING SYSTEM")
+
+        print_database_status()
 
         command = input(
             "Input a command\n\n"
@@ -443,9 +496,19 @@ def main():
             case "1":
                 start_tournament()
             case "2":
-                input_new_csv_and_update()
+                input_new_csv_files_and_update_databases()
+                crypter.encrypt_database(password)
+                print(
+                    'database encrypted from "decrypted_data\\."... to "encrypted_data.bin".'
+                )
+                time.sleep(1)
             case "3":
                 update_from_data()
+                crypter.encrypt_database(password)
+                print(
+                    'database encrypted from "decrypted_data\\."... to "encrypted_data.bin".'
+                )
+                time.sleep(1)
             case "4":
                 ans = input(
                     "WARNING:\nAre you sure you want to reset (and input) all? (y/n)\n"
@@ -453,6 +516,11 @@ def main():
                 if ans == "y":
                     clear_terminal()
                     reset_and_input_all()
+                    crypter.encrypt_database(password)
+                    print(
+                        'database encrypted from "decrypted_data\\."... to "encrypted_data.bin".'
+                    )
+                    time.sleep(1)
             case "5":
                 data_query()
             case "6":
