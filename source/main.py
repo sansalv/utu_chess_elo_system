@@ -4,9 +4,17 @@ Module containing the UI for menu while loop.
 
 import datetime as dt
 import os
-import random as rd
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
+import crypter
+import time
+import shutil
+import io
+import zipfile
+from pathlib import Path
+from tkinter import filedialog
+from cryptography.fernet import InvalidToken
+
 import player
 import game
 import save_and_load as sl
@@ -17,9 +25,11 @@ import time
 from pathlib import Path
 from cryptography.fernet import InvalidToken
 import shutil
-from tkinter import filedialog
+from tkinter import filedialog, Tk
 import io
 import zipfile
+
+from tournament_starter import start_tournament
 
 
 PASSWORD_CHECKER_FILE = Path(__file__).parent / "password_checker.bin"
@@ -30,168 +40,65 @@ PLAYERS_DATABASE = DECRYPTED_DATA_FOLDER / "players_database.json"
 INPUTED_FILES = DECRYPTED_DATA_FOLDER / "inputed_files.txt"
 
 
-# Start new tournament day (do the name list first)
-def start_tournament():
-    """
-    This method starts a tournament by reading player names from a txt file,
-    loading old players from a database,
-    finding new players and appending them to the old players list,
-    suggesting tournament groups splits by reading their Elo ratings,
-    and printing the randomized seating orders.
 
-    Returns
-    -------
-    None
-    """
-    # Prompt user for the date of the tournament
-    date = input("Input date, in the format YYYY-MM-DD:\n")
+# Input new source files, and update
+def input_new_csv_files_and_update_databases():
+    """docs"""
 
-    # Read tournament names from txt file
-    with open("tournament_names.txt", "r") as f:
-        tournament_names = f.read().split("\n")[2:]
-
-    # Load old players into a list
-    all_players = sl.load_players()
-
-    # Check for new players and append them to all_players list
-    is_new_players = False
-    old_names = [p.name for p in all_players]
-    for name in tournament_names:
-        # If new player is found
-
-        if name not in old_names:
-            is_new_players = True
-
-            ans = input(
-                f"Is {name} a new player? Abort and correct name if there is a spelling error. (y/abort)\n"
-            )
-
-            # If invalid answer, ask again
-            while ans not in ["y", "abort"]:
-                ans = input("Try answering again (y/abort)\n")
-                
-            if ans == "abort":
-                print("Databases didn't update.")
-                input("\nPress enter to continue.\n")
-                return
-
-            # Create new player and append it to all_players
-            level = int(
-                input(
-                    f"What is the starting level of this player? (0=500, 1=1000, 2=1500)\n"
-                )
-            )
-
-            new_player = player.new_player(name, level, date)
-            all_players.append(new_player)
-
-    # If new players were found, save all players back into json database
-    if is_new_players:
-        sl.save_players(all_players)
-        print("\nUpdated players to players_database.json successfully.\n")
-
-    # tournament_players are the players who are in the tournament
-    tournament_players = [p for p in all_players if p.name in tournament_names]
-
-    # Sort tournament players into beginner, intermediate and experienced groups
-    sorted_lists = player.get_tournament_group_lists(tournament_players)
-
-    # Suggest and correct tournament split
-    with open("tournament_split.txt", "w") as f:
-        print("Suggested tournament split. You can move players.", file=f)
-        for group in sorted_lists:
-            print("----------------------------", file=f)
-            name_elo_list = [(p.name, p.elo) for p in group]
-            print(*name_elo_list, sep="\n", file=f)
-    
-    # Print message to user. The suggested split is at the txt file and it can be manually altered
-    print()
-    ans = input(
-        "Suggested tournament split is now in tournament_split.txt. You can move players.\nAfter this, type continue/abort.\n"
-    )
-    
-    # If invalid answer, ask again
-    while ans not in ["continue", "abort"]:
-        ans = input("Try answering again (continue/abort)\n")
-        
-    if ans == "abort":
-        return
-
-    # Read tournament split from txt file
-    with open("tournament_split.txt", "r") as f:
-        # tournament_names_elos is a list of the txt file rows
-        # (either a player's name and elo or a --- line that splits groups)
-        tournament_names_elos = f.read().split("\n")[2:]
-
-    # Create beginners, intermediate and experienced groups. The index is to track the groups
-    groups = [[], [], []]
-    group_index = 0
-
-    # Iterate through each row in the txt file
-    # Each row is either a player (name and elo) or a group splitting line
-    for name_elo in tournament_names_elos:
-        if name_elo not in ["", "----------------------------"]:
-            groups[group_index].append(name_elo)
-        else:
-            group_index += 1
-
-    # Start printing the final group splits
-    print("\n\nGroups in seating orders (random order):\n")
-    print("----------------------------")
-
-    # Print all non-zero groups (if there are only few players there are going to be less than 3 groups)
-    n_groups = sum([1 if len(group) != 0 else 0 for group in groups])
-    for i in range(n_groups):
-
-        # Print a groups in a random seating order
-        rd.shuffle(groups[i])
-        print(f"Group {i}:")
-
-        # Print only players names (and not their Elo ratings)
-        for name_elo in groups[i]:
-            ne = eval(name_elo)
-            print(ne[0])
-
-        print("----------------------------")
-
-    input("\nPress enter to continue.")
-
-# _______________________________________________________________________
-
-# Input new source file
-def input_new_csv_and_update():
     print(
+        "File explorer window opened. \n\n"
         "File name insructions:\n\n"
         "The tournament csv file should be name in format:\n"
         "%Y-%m-%d_Beginner/Intermediate/Experienced_Group[+ optional extra].csv\n\n"
         "The free games csv file should be named in format:\n"
         "%Y-%m-%d_Free_Rated_Games - Games/New Players Output.csv\n\n"
     )
-    input("\nPress enter open file dialog GUI.")
+    input_more = "y"
+    while input_more == "y":
+        _input_new_csv()
+        input_more = input("Do you want to input more csv files? (y/n)\n")
+
+    update_from_data()
+
+
+def _input_new_csv():
     try:
-        new_file_path_to_input = Path(filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")]))
+        root = Tk()
+        root.withdraw()  # Hide the main window
+        root.attributes("-topmost", True)  # Bring the root window to the front
+        new_file_path_to_input = Path(
+            filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
+        )
+        # root.attributes('-topmost', False)  # Set the root window back to normal
     except TypeError:
         return
 
     if not new_file_path_to_input.is_file():
         print("Invalid file path or file does not exist.")
-        input("\nPress enter to go to menu.")
+        # input("\nPress enter to go to menu.")
         return
 
-    if "Free_Rated" in new_file_path_to_input.name:
+    if "free_rated" in new_file_path_to_input.name.lower():
         destination_folder = DECRYPTED_DATA_FOLDER / "free_rated_games_data"
-    elif "Group" in new_file_path_to_input.name:
+    elif "group" in new_file_path_to_input.name.lower():
         destination_folder = DECRYPTED_DATA_FOLDER / "tournament_data"
     else:
         print("Check the selected source file name, and retry!")
-        input("\nPress enter to go to menu.")
+        # input("\nPress enter to go to menu.")
         return
 
-    shutil.copy(new_file_path_to_input, destination_folder / new_file_path_to_input.name )
-    print(f"File copy-pasted successfully to source files folder '{new_file_path_to_input.parent.name}'!")
-    update_from_data()
+    print(f'"{new_file_path_to_input.name}"')
+    shutil.copy(
+        new_file_path_to_input, destination_folder / new_file_path_to_input.name
+    )
+    print(
+        f"File copy-pasted successfully to source files folder from '{new_file_path_to_input.parent.name}'!\n"
+    )
+
+
 
 # _______________________________________________________________________
+
 
 # Check for new data
 def update_from_data():
@@ -203,7 +110,7 @@ def update_from_data():
     -------
     None
     """
-    
+
     # New files to input
     new_tournament_files, new_free_games_files = sl.get_new_input_file_lists()
     new_files = new_tournament_files + new_free_games_files
@@ -232,7 +139,6 @@ def update_from_data():
 
     # Loop through each file and update accordingly
     for f in new_files:
-
         # Necessary info is in the file names
         file_info = f.split("_")[1]
 
@@ -262,13 +168,15 @@ def update_from_data():
                     f"\nFree games file {f} not identified. This file will be skipped."
                 )
                 input("\nPress enter to continue.")
-        
+
         # Every file should be either tournament or free games file
         else:
             print(f"\nFile {f} not identified. This file will be skipped.")
             input("\nPress enter to continue.")
 
+
 # _____________________________________________________________________
+
 
 # Reset and input all (CAUTION)
 def reset_and_input_all():
@@ -290,7 +198,9 @@ def reset_and_input_all():
     # Input all
     update_from_data()
 
+
 # _____________________________________________________________________
+
 
 # Look at a profile
 def data_query():
@@ -311,7 +221,7 @@ def data_query():
     # If the user pressed enter, exit the function
     if x == "":
         return
-    
+
     # Load the list of players from the database
     players = sl.load_players()
 
@@ -331,13 +241,15 @@ def data_query():
     if found == False:
         input("No player with that name")
         return
-    
+
     # Plot the player's Elo history
     plot = input("\nDo you want a Elo history plot? (y/n)\n")
     if plot == "y":
         p.plot_elo_history()
 
+
 # _____________________________________________________________________
+
 
 # Print TYLO leaderboard
 def print_elo_leaderboard():
@@ -385,7 +297,12 @@ def print_elo_leaderboard():
     plot = input("\nDo you want a leaderboard bar plot? (y/n)\n")
     if plot == "y":
         # Extract player names in format F. Lastname and ratings for plotting
-        names = [f"{p.name[0]}. " + p.name.split(" ")[1] for p in reversed(players)]
+        names = []
+        for p in reversed(players):
+            try:
+                names.append(f"{p.name[0]}. " + p.name.split(" ")[1])
+            except IndexError:
+                names.append(p.name)
         elos = [p.elo for p in reversed(players)]
         # Create bar plot
         plt.barh(names, elos)
@@ -397,7 +314,10 @@ def print_elo_leaderboard():
     if plot2 == "y":
         # Plot rating history for each player
         for p in players:
-            name = f"{p.name[0]}. " + p.name.split(" ")[1]
+            try:
+                name = f"{p.name[0]}. " + p.name.split(" ")[1]
+            except IndexError:
+                name = p.name
             dates = [eh[0] for eh in p.elo_history]
             x = [dt.datetime.strptime(d, "%Y-%m-%d").date() for d in dates]
             plt.gca().xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d"))
@@ -416,7 +336,9 @@ def print_elo_leaderboard():
 
     input("\nPress enter to continue.")
 
+
 # _______________________________________________________________________
+
 
 # Print sorted players
 def sort_players():
@@ -432,7 +354,9 @@ def sort_players():
     players = sl.load_players()
 
     # Prompt the user to select the criterion for sorting
-    ans = input("How do you want to sort players?\n(a = all players for free games table \n n = number of games)\n")
+    ans = input(
+        "How do you want to sort players?\n(a = all players for free games table \n n = number of games)\n"
+    )
     clear_terminal()
 
     # Sort the players by the number of games played
@@ -455,21 +379,22 @@ def sort_players():
 
     input("\nPress enter to continue.")
 
+
 # _______________________________________________________________________
+
 
 def check_password(password_checker_file: Path = PASSWORD_CHECKER_FILE):
     """
     This function checks the password against a password checker file.
     It asks for a password and decrypts the password checker file with it.
     If it successfully decrypts the file, the password is correct.
-    
+
     Parameters
     ----------
     password_checker_file : Path, optional
         Path to the password checker file. The default is PASSWORD_CHECKER_FILE.
     """
-    clear_terminal()
-    
+
     # This is the expected response after decrypting the password checker file.
     response = (
         "Kiitos, että luet koodiamme. Tää meidän salasanasysteemi ei oo kauheen "
@@ -477,10 +402,11 @@ def check_password(password_checker_file: Path = PASSWORD_CHECKER_FILE):
     )
     while True:
         password = input("Input password:\n")
-        clear_terminal()
 
         try:
-            decrypted_file = crypter.decrypt_file(password, password_checker_file).decode()
+            decrypted_file = crypter.decrypt_file(
+                password, password_checker_file
+            ).decode()
         except InvalidToken:
             print("Incorrect password.")
             continue
@@ -488,56 +414,80 @@ def check_password(password_checker_file: Path = PASSWORD_CHECKER_FILE):
         if decrypted_file != response:
             print("Incorrect password")
         else:
-            print("Welcome!")
-            time.sleep(1)
             break
 
     return password
 
 
-#_______________________________________________________________________
+# _______________________________________________________________________
 
-def decrypt_database(password: str, encrypted_data_file_path: Path = ENCRYPTED_DATA_FILE):
 
-    decrypted_file = crypter.decrypt_file(password, encrypted_data_file_path)
-    
-    # Create a BytesIO object from the zipped bytes
-    zipped_io = io.BytesIO(decrypted_file)
+def print_database_status():
+    # Check the latest file update date
+    with open(INPUTED_FILES, "r") as txt:
+        files = txt.read().splitlines()
+    try:
+        latest_update_date = files[-1].split("_")[0]
+    except IndexError:
+        latest_update_date = "No update files found"
 
-    # Create a ZipFile object from the BytesIO object
-    with zipfile.ZipFile(zipped_io, 'r') as zip_ref:
-        # Extract all files to the destination directory
-        zip_ref.extractall(DECRYPTED_DATA_FOLDER.parent)
-    # Close the BytesIO object
-    zipped_io.close()
+    # Check number of players in database
+    players = sl.load_players()
+    n_players = len(players)
+
+    # Check number of games in database
+    games = sl.load_games()
+    n_games = len(games)
+
+    print(
+        f"Date of the latest update file: {latest_update_date}.\n"
+        f"Number of players in database: {n_players}.\n"
+        f"Number of games in databse: {n_games}.\n"
+    )
+
+
 
 # _______________________________________________________________________
+
 
 def clear_terminal():
     # There are different commands to Windows, Mac and Linux to clear terminal
-    os.system("cls" if os.name == "nt" else "clear") 
+    os.system("cls" if os.name == "nt" else "clear")
+
 
 # _______________________________________________________________________
 
+
 def main():
-    
+    clear_terminal()
     password = check_password()
-    decrypt_database(password)
+    print("Correct password.")
+    time.sleep(0.2)
+    print('decrypting database from "encrypted_data.bin"...')
+    crypter.decrypt_database(password)
+    time.sleep(0.2)
+    print('database decrypted to "decrypted_data\\.".')
+    time.sleep(0.6)
+    print("Welcome!")
+    time.sleep(1.2)
 
     while True:
-
         clear_terminal()
 
+        print("UNIVERSITY HILL CHESS CLUB RANKING SYSTEM")
+
+        print_database_status()
+
         command = input(
-            "Input a command\n\n" +
-            "1: Start new tournament day (do the name list first)\n" +
-            "2: Input data file (.csv) and update databases\n" +
-            "3: Check for new data\n" +
-            "4: Reset and input all (CAUTION)\n" +
-            "5: Look at a profile\n" +
-            "6: Print TYLO leaderboard\n" +
-            "7: Print sorted players\n\n" +
-            "ENTER: Exit\n\n"
+            "Input a command\n\n"
+            + "1: Start new tournament day\n"
+            + "2: Input data file (.csv) and update databases\n"
+            + "3: Check for new data\n"
+            + "4: Reset and input all (CAUTION)\n"
+            + "5: Look at a profile\n"
+            + "6: Print TYLO leaderboard\n"
+            + "7: Print sorted players\n\n"
+            + "ENTER: Exit\n\n"
         )
 
         clear_terminal()
@@ -546,9 +496,19 @@ def main():
             case "1":
                 start_tournament()
             case "2":
-                input_new_csv_and_update()
+                input_new_csv_files_and_update_databases()
+                crypter.encrypt_database(password)
+                print(
+                    'database encrypted from "decrypted_data\\."... to "encrypted_data.bin".'
+                )
+                time.sleep(1)
             case "3":
                 update_from_data()
+                crypter.encrypt_database(password)
+                print(
+                    'database encrypted from "decrypted_data\\."... to "encrypted_data.bin".'
+                )
+                time.sleep(1)
             case "4":
                 ans = input(
                     "WARNING:\nAre you sure you want to reset (and input) all? (y/n)\n"
@@ -556,6 +516,11 @@ def main():
                 if ans == "y":
                     clear_terminal()
                     reset_and_input_all()
+                    crypter.encrypt_database(password)
+                    print(
+                        'database encrypted from "decrypted_data\\."... to "encrypted_data.bin".'
+                    )
+                    time.sleep(1)
             case "5":
                 data_query()
             case "6":
@@ -566,6 +531,7 @@ def main():
                 exit()
             case _:
                 print("Incorrect command")
+
 
 if __name__ == "__main__":
     main()
