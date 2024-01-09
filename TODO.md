@@ -9,9 +9,10 @@
 3. turnauksen aloittaminen tekee ja avaa nimien inputtaamista varten txt-tiedoston (jota ei gittiin)
 
 ### Santeri Salomaa:
-1. exe tiedosto, mistä aukeaa UI, ja joka kysyy salasanaa
-2. file explorer uuden source csv:n inputtaamiseen
-3. käyttöohjeet gitin README-tiedostoon
+1. ~~sh tiedosto, mistä aukeaa UI, ja joka kysyy salasanaa~~
+2. ~~file explorer uuden source csv:n inputtaamiseen~~
+3. ~~start_tournament metodin siirtäminen ja siistiminen~~
+4. käyttöohjeet gitin README-tiedostoon
 
 
 ## Ei kriittiset:
