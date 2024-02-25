@@ -35,11 +35,14 @@ def input_tournament(source_file: str, tournament_data_folder: Path = TOURNAMENT
         print(
             f"Tournament file '{source_file}' with group identifier '{group_info}' not identified."
         )
-        level = int(
-            input(
-                f"Input manually the level of '{group_info}'\n(0=500=Beginner, 1=1000=Intermediate, 2=1500=Experienced, abort=abort)\n"
-            )
+        ans = input(
+            f"Input manually the level of '{group_info}'\n(0=500=Beginner, 1=1000=Intermediate, 2=1500=Experienced, abort=abort)\n"
         )
+        if ans == "abort":
+            print("Aborted.")
+            return
+        else:
+            level = int(ans)
 
     # Load old players from database
     all_players = (
