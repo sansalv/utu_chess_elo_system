@@ -92,7 +92,7 @@ def get_new_input_file_lists(
     # First, read the contents of the file containing previously input files
     old_files = []
     if os.stat(filename).st_size != 0:  # check if file is empty
-        with open(filename, "r") as txt:
+        with open(filename, "r", encoding="utf-8") as txt:
             old_files = txt.read().splitlines()
 
     # Next, search for new tournament files that have not been processed before
@@ -137,7 +137,7 @@ def save_new_games(new_games: list, filename: Path = GAMES_DATABASE) -> None:
     """
 
     # Read old json
-    with open(filename, "r") as db:
+    with open(filename, "r", encoding="utf-8") as db:
         old_json = db.read()
     game_dictionaries = json.loads(old_json)
 
@@ -168,7 +168,7 @@ def load_players(filename: Path = PLAYERS_DATABASE) -> list:
     """
 
     # Open the file in read mode
-    with open(filename, "r") as db:
+    with open(filename, "r", encoding="utf-8") as db:
         # Read the JSON text from the file
         json_format = db.read()
 

@@ -267,7 +267,7 @@ def print_elo_leaderboard():
     players = sorted(players, key=lambda h: h.elo, reverse=True)
 
     # Get the last update date from the last updated file
-    with open(INPUTED_FILES, "r") as txt:
+    with open(INPUTED_FILES, "r", encoding="utf-8") as txt:
         files = txt.read().splitlines()
     date = files[-1].split("_")[0]
 
@@ -424,7 +424,7 @@ def check_password(password_checker_file: Path = PASSWORD_CHECKER_FILE):
 
 def print_database_status():
     # Check the latest file update date
-    with open(INPUTED_FILES, "r") as txt:
+    with open(INPUTED_FILES, "r", encoding="utf-8") as txt:
         files = txt.read().splitlines()
     try:
         latest_update_date = files[-1].split("_")[0]
