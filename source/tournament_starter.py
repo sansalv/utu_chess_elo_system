@@ -27,7 +27,9 @@ def start_tournament() -> None:
     all_players = sl.load_players()
 
     # Append potential new playes to the all_players list, and update database
-    _append_new_players(date, all_players, tournament_names)
+    should_continue = _append_new_players(date, all_players, tournament_names)
+    if not should_continue:
+        return
 
     # Sort tournament players into beginner, intermediate and experienced groups
     tournament_players = [p for p in all_players if p.name in tournament_names]
@@ -93,7 +95,7 @@ def _input_names_in_txt_file() -> list[str]:
     input("Press enter when the namelist is ready and the file is saved.")
 
     # Read tournament names from txt file, delete temp file, and return names
-    with open("tournament_names.txt", "r") as f:
+    with open("tournament_names.txt", "r", encoding="utf-8") as f:
         tournament_names = f.read().split("\n")[2:]
         tournament_names = [
             name.strip() for name in tournament_names if name.strip() != ""
@@ -103,7 +105,7 @@ def _input_names_in_txt_file() -> list[str]:
     return tournament_names
 
 
-def _append_new_players(date: str, all_players: list, tournament_names: list) -> None:
+def _append_new_players(date: str, all_players: list, tournament_names: list) -> bool:
     """Checks for new players and append them to all_players list.
     Updates the database, if there are new players.
 
@@ -119,7 +121,8 @@ def _append_new_players(date: str, all_players: list, tournament_names: list) ->
 
     Returns
     -------
-    None
+    should_continue : bool
+        If True, the program continues. If False, the program aborts.
     """
     # Check for new players and append them to all_players list
     is_new_players = False
@@ -135,7 +138,7 @@ def _append_new_players(date: str, all_players: list, tournament_names: list) ->
             if ans == "abort":
                 print("Databases didn't update.")
                 input("\nPress enter to continue.\n")
-                return
+                return False
 
             # Create new player and append it to all_players
             level = int(
@@ -152,7 +155,7 @@ def _append_new_players(date: str, all_players: list, tournament_names: list) ->
         sl.save_players(all_players)
         print("\nUpdated players to players_database.json successfully.\n")
 
-    return is_new_players
+    return True
 
 
 def _suggest_and_edit_tournament_split(sorted_lists: list) -> list[tuple]:
