@@ -162,7 +162,7 @@ def from_games_csv_to_games_list(file_location: Path):
     free_games = pd.read_csv(file_location)
     free_games_list = []
     for i in range(len(free_games)):
-        l = list(free_games.iloc[i])
+        l = list(free_games[['White Player', 'Black Player', 'White Score']].iloc[i])
         # white result datatype from numpy.int64 to float
         l[2] = float(l[2])
         free_games_list.append(l)
@@ -201,7 +201,7 @@ def get_free_games_csv_pairs(
 ):  # new_files is a sorted list (by datetime) of csv files
     # Filter only free games data (others are tournaments)
     # This will leave games and new players
-    free_games = [f for f in new_files if f.split("_")[1] == "Free"]
+    free_games = [f for f in new_files if (f.split("_")[1] == "Free") and (f.split("_")[-1] == 'Games - Games Output.csv' or f.split("_")[-1] == 'Games - New Players Output.csv')]
     # Free games csv pairs will be in the list free_games_with_new_players
     n_free_games = int(len(free_games) / 2)
     free_games_with_new_players = [[None, None] for i in range(n_free_games)]

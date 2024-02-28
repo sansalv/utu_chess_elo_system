@@ -7,6 +7,7 @@ from pathlib import Path
 
 # After Player class there are methods involving Player instances
 
+
 class Player:
     """
     A class representing a chess club player.
@@ -177,6 +178,7 @@ class Player:
 
 # Methods outside of class:
 
+
 def new_player(name, level, date):
     """
     This function creates a new instance of the Player class and sets its starting Elo rating
@@ -187,7 +189,7 @@ def new_player(name, level, date):
     name : str
         The name of the player, in the format "Firstname Lastname"
     level : int
-        The level of the player - 
+        The level of the player -
         0 (rating = 500), 1 (rating = 1000), or 2 (rating = 1500)
     date : str
         date when the player was created, in the format "YYYY-MM-DD"
@@ -208,11 +210,10 @@ def new_player(name, level, date):
         starting_elo = 1500
 
     # Create the new player object with initial elo_history tuple and set the games_played at zero.
-    new_player = Player(
-        name, starting_elo, [(date, starting_elo)], 0
-    )
+    new_player = Player(name, starting_elo, [(date, starting_elo)], 0)
 
     return new_player
+
 
 def find_player(players, name):
     """
@@ -239,6 +240,7 @@ def find_player(players, name):
             return player
     # If no matching player is found, raise an exception with an informative message.
     raise ValueError(f"No player found with name '{name}'")
+
 
 def print_player_games(p, games):
     print(p)
@@ -290,9 +292,10 @@ def get_unique_players_from_games_csv(file_location: Path):
     # Read the CSV file into a Pandas DataFrame
     games_df = pd.read_csv(file_location)
 
-
     # Get the unique player names from the "White Player" and "Black Player" columns
-    unique_players = list(set(games_df["White Player"]).union(set(games_df["Black Player"])))
+    unique_players = list(
+        set(games_df["White Player"]).union(set(games_df["Black Player"]))
+    )
 
     # Remove any null or empty player names from the list
     unique_players = [player for player in unique_players if player]
@@ -307,8 +310,27 @@ def get_unique_players_from_games_csv(file_location: Path):
     return unique_players
 
 
-def get_new_players_with_level_from_games_csv(file_location):
+def get_new_players_with_level_from_free_games_csv(file_location: Path):
     """
+    Reads free games CSV file and returns list of tuples,
+    with player name and starting TYLO rank (0, 1 or 2).
+    Eg. [("Elias Ervelä", 1), ("Santeri Salomaa", 2)]
+    """
+
+    free_games_csv = pd.read_csv(file_location)
+    new_players_table = free_games_csv[
+        ["New players", "Starting TYLO (0,1,2)"]
+    ].dropna()
+    new_players_list = [
+        list(new_players_table.iloc[i]) for i in range(len(new_players_table))
+    ]
+
+    return new_players_list
+
+
+def get_new_players_with_level_from_free_games_csv_legacy(file_location):
+    """
+    This is now legacy method, but kept here to be compatible with old filess.
     Reads free games CSV file and returns list of tuples,
     with player name and starting TYLO rank (0, 1 or 2).
     Eg. [("Elias Ervelä", 1), ("Santeri Salomaa", 2)]
@@ -327,7 +349,9 @@ def get_new_players_with_level_from_games_csv(file_location):
     new_players_table = pd.read_csv(file_location)
 
     # Create the list
-    new_players_list = [list(new_players_table.iloc[i]) for i in range(len(new_players_table))]
+    new_players_list = [
+        list(new_players_table.iloc[i]) for i in range(len(new_players_table))
+    ]
 
     return new_players_list
 
@@ -406,7 +430,9 @@ def get_tournament_group_lists(tournament_players):
         if len(group_split) == 3:
             # Split players into three groups: beginners, intermediate, experienced
             beginners_group = sorted_Players_list[: group_split[0]]
-            intermediate_group = sorted_Players_list[group_split[0] : group_split[0] + group_split[1]]
+            intermediate_group = sorted_Players_list[
+                group_split[0] : group_split[0] + group_split[1]
+            ]
             experienced_group = sorted_Players_list[group_split[0] + group_split[1] :]
 
             groups = [beginners_group, intermediate_group, experienced_group]

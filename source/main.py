@@ -40,7 +40,6 @@ PLAYERS_DATABASE = DECRYPTED_DATA_FOLDER / "players_database.json"
 INPUTED_FILES = DECRYPTED_DATA_FOLDER / "inputed_files.txt"
 
 
-
 # Input new source files, and update
 def input_new_csv_files_and_update_databases():
     """docs"""
@@ -96,7 +95,6 @@ def _input_new_csv():
     )
 
 
-
 # _______________________________________________________________________
 
 
@@ -132,6 +130,7 @@ def update_from_data():
     if ans != "y":
         return
 
+    # Legacy way to handle free games:
     # Free games data consist of two files: the games and new players
     # These are paired up here
     free_games_csv_pairs = game.get_free_games_csv_pairs(new_files)
@@ -141,6 +140,7 @@ def update_from_data():
     for f in new_files:
         # Necessary info is in the file names
         file_info = f.split("_")[1]
+        file_info_2 = f.split("_")[-1]
 
         # If file is a tournament file, do input_tournament
         if file_info in [
@@ -154,10 +154,21 @@ def update_from_data():
             input_data.input_tournament(source_file=f)
             sl.save_input_source(f)
 
+        elif file_info == "Free" and not (
+            file_info_2 == "Games - Games Output.csv"
+            or file_info_2 == "Games - New Players Output.csv"
+        ):
+            input_data.input_free_games(f)
+            sl.save_input_source(f)
+
+        # Legacy way to handle free games:
         # If file is a free games file, do input_games. New players are created there, also.
-        elif file_info == "Free":
+        elif file_info == "Free" and (
+            file_info_2 == "Games - Games Output.csv"
+            or file_info_2 == "Games - New Players Output.csv"
+        ):
             if f.split(" - ")[1] == "Games Output.csv":
-                input_data.input_games(free_games_csv_pairs[free_games_idx])
+                input_data.input_free_games_legacy(free_games_csv_pairs[free_games_idx])
                 sl.save_input_source(f)
                 free_games_idx += 1
             elif f.split(" - ")[1] == "New Players Output.csv":
@@ -444,7 +455,6 @@ def print_database_status():
         f"Number of players in database: {n_players}.\n"
         f"Number of games in databse: {n_games}.\n"
     )
-
 
 
 # _______________________________________________________________________
