@@ -18,12 +18,14 @@ FREE_RATED_GAMES_DATA_FOLDER = DECRYPTED_DATA_FOLDER / "free_rated_games_data"
 
 # TODO: Comment rest of this properly
 # Tournament data input. Creates games and players from csv data and updated databases.
-def input_tournament(source_file: str, tournament_data_folder: Path = TOURNAMENT_DATA_FOLDER):
+def input_tournament(
+    source_file: str, tournament_data_folder: Path = TOURNAMENT_DATA_FOLDER
+):
     print(f"\nInput tournament from file {source_file} started.")
 
     file_location = tournament_data_folder / source_file
     date = source_file.split("_")[0]
-    
+
     group_info = source_file.split("_")[1]
     if group_info == "Beginners":
         level = 0
@@ -90,14 +92,75 @@ def input_tournament(source_file: str, tournament_data_folder: Path = TOURNAMENT
     input("\nPress enter to continue.")
 
 
-def input_games(
+def input_free_games(
+    source_file: str, free_rated_games_data_folder: Path = FREE_RATED_GAMES_DATA_FOLDER
+):
+    """
+    Takes the csv of a "Free_Rated_Games" and handles it.
+    From that csv, this checks the new players and adds them to the player database
+    and the games that have been played and add them to the games database.
+    """
+
+    source_file_location = free_rated_games_data_folder / source_file
+
+    # Print info
+    print(f"\nInput free rated games from file {source_file} started.")
+    date = source_file.split("_")[0]
+
+    # Load old players from database
+    all_players = (
+        sl.load_players()
+    )  # After this old players but later also new players will be appended
+
+    # Create players
+    new_player_names_with_level = player.get_new_players_with_level_from_free_games_csv(
+        source_file_location
+    )
+    print("\nNew players:")
+    for name_level in new_player_names_with_level:
+        name = name_level[0]
+        level = name_level[1]
+        print(f"{name}, starting level: {level}")
+        all_players.append(player.new_player(name, level, date))
+
+    # Filter all players to present players
+    present_player_names = player.get_unique_players_from_games_csv(
+        source_file_location
+    )
+    present_players = [p for p in all_players if p.name in present_player_names]
+
+    # csv to list of Game instances and save games to json database
+    raw_game_list = game.from_games_csv_to_games_list(source_file_location)
+    games = game.game_lists_to_game_instances(
+        date, raw_game_list, present_players, source_file
+    )
+    sl.save_new_games(games)
+    print("\nSaved games to game_database.json successfully.")
+
+    # Calculate and update Elos and Elo histories
+    for p in present_players:
+        new_elo = p.calculate_new_elo_tournament(games)
+        p.update_elo_and_history(date, new_elo)
+
+    # Save all players back into json database
+    sl.save_players(all_players)
+    print("Updated players to players_database.json successfully.")
+    input("\nPress enter to continue.")
+
+
+def input_free_games_legacy(
     free_games_csv_pair: list | tuple,
     free_rated_games_data_folder: Path = FREE_RATED_GAMES_DATA_FOLDER,
 ):
+    """
+    The old way to handle free games.
+    This is still kept to make the old files work.
+    """
+
     source_file = free_games_csv_pair[0]
     source_file_location = free_rated_games_data_folder / source_file
     new_players_file = free_games_csv_pair[1]
-    new_players_file_location = free_rated_games_data_folder/ new_players_file
+    new_players_file_location = free_rated_games_data_folder / new_players_file
 
     # ___________________________________
     # Info of the free rated games
@@ -113,8 +176,10 @@ def input_games(
     # ___________________________________
     # Create new players:
 
-    new_player_names_with_level = player.get_new_players_with_level_from_games_csv(
-        new_players_file_location
+    new_player_names_with_level = (
+        player.get_new_players_with_level_from_free_games_csv_legacy(
+            new_players_file_location
+        )
     )
 
     print("\nNew players:")
