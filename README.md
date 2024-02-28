@@ -8,19 +8,25 @@ We implemented Elo rating system. Players get their Elo rating (that we named TY
 
 Use command `git clone` to clone this repository into your computer. After this, go to the home directory in terminal window with `cd utu_chess_elo_system` command. This is where everything is run.
 
-Setup and activate the virtual environmentwith:
+**Setup and activate the virtual environment with these two commands:**
 ```bash
 python -m venv .venv
+
 ./.venv/Scripts/activate
 ```
-You might need to allow script execuring `Set-ExecutionPolicy Unrestricted -Scope Process` if your computer does not run the activation script. You have activated the virtual environment when you see (.venv) in the beginning of the terminal row.
+If you get error
+<p style="color: red;">... cannot be loaded because running scripts is disabled on this system. ...</p>
+you need to allow script executing:
 
-Install the requirements into the virtual environment
+1. Start terminal as an Administrator. 
+2. Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned` if your computer does not run the activation script. You have activated the virtual environment when you see (.venv) in the beginning of the terminal row.
+
+**Install the requirements into the virtual environment**
 ```bash
 pip install -r requirements.txt
 ```
 
-When everything is installed into the virtual environment, you can run the program with
+When everything is installed into the virtual environment, you can **run the program with**
 ```bash
 python.exe ./source/main.py
 ```
