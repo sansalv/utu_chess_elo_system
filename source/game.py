@@ -208,18 +208,25 @@ def get_free_games_csv_pairs(
 
     new_players_files = []
     i = 0
-    for f in free_games:
-        t = f.split(" - ")[1]
-        if t == "Games Output.csv":
-            free_games_with_new_players[i][0] = f
-            i += 1
-        elif t == "New Players Output.csv":
-            new_players_files.append(f)
-        else:
-            print(
-                f"\nFile {f} not identified. This file will be skipped. Press enter to continue."
-            )
-            input()
+    try:
+        for f in free_games:
+            t = f.split(" - ")[1]
+            if t == "Games Output.csv":
+                free_games_with_new_players[i][0] = f
+                i += 1
+            elif t == "New Players Output.csv":
+                new_players_files.append(f)
+            else:
+                print(
+                    f"\nFile {f} not identified. This file will be skipped. Press enter to continue."
+                )
+                input()
+    except Exception as exc:
+        print(
+            f"Error while trying to pair free games csv files: {exc}. Check that you have: inputted "
+            "the output sheets (not table sheets), and that the New Players Output.csv file is also inputted (even if it is empty)."
+        )
+        raise exc
 
     # Pair the new players data to the free games data
 
