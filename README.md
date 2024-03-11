@@ -8,7 +8,7 @@ We implemented Elo rating system. Players get their Elo rating (that we named TY
 
 Use command `git clone` to clone this repository into your computer. After this, go to the home directory in terminal window with `cd utu_chess_elo_system` command. This is where everything is run.
 
-Setup and activate the virtual environmentwith:
+Setup and activate the virtual environment with:
 ```bash
 python -m venv .venv
 ./.venv/Scripts/activate
