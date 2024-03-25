@@ -16,10 +16,12 @@ python -m venv .venv
 ```
 If you get error
 <p style="color: red;">... cannot be loaded because running scripts is disabled on this system. ...</p>
-you need to allow script executing:
+you need to allow script executing, by either:
 
-1. Start terminal as an Administrator. 
-2. Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned` or `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` if your computer does not run the activation script. You have activated the virtual environment when you see (.venv) in the beginning of the terminal row.
+- Start terminal as an Administrator, or
+- Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned` or `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` if your computer does not run the activation script.
+
+You have activated the virtual environment when you see (.venv) in the beginning of the terminal row.
 
 **Install the requirements into the virtual environment**
 ```bash
